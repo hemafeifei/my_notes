@@ -51,5 +51,8 @@ CREATE TABLE "METRO"."DM_HOLIDAY_RESULT_WH"
   TABLESPACE "DW" ;
 
 # 传参执行python
-python metro_pred_hol_wuhan.py -18day=210000 -17day=231000 -16day=242000 -hol=DBFE -line=line1
+python metro_pred_hol_wuhan.py -18day=355384 -17day=410239 -16day=411602 -hol=TOSW -line=line1
+python metro_pred_hol_wuhan.py -18day=832457 -17day=910424 -16day=900996 -hol=TOSW -line=line2
+python metro_pred_hol_wuhan.py -18day=321424 -17day=425180 -16day=420894 -hol=TOSW -line=line3
+python metro_pred_hol_wuhan.py -18day=544641 -17day=598749 -16day=598869 -hol=TOSW -line=line4
 python metro_pred_hol_wuhan.py -h
