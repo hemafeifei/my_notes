@@ -1,0 +1,20 @@
+#Oracle ODBC—win10
+1 #下载驱动
+http://www.oracle.com/technetwork/topics/winx64soft-089540.html 下载basic和odbc
+两个文件，解压到一个文件夹；以管理员权限运行obdc_install.exe
+
+2#配置连接
+在控制面板设置odbc64
+TNS Service Name: 172.20.10.178:1521/dwpdb
+User Id: dw
+测试连接，输入数据库密码。
+
+#Oracle ODBC—linux_centos7
+
+
+
+#Oracle JDBC的连接
+(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = 172.20.10.178)(PORT = 1521))(CONNECT_DATA =(SERVER = DEDICATED)(SERVICE_NAME = dwpdb)))
+
+Oracle BI Server连接
+#安装了BI Admin Tool之后，odbc连接里会多一个Oracle BI Server-Oracle Home,使用这个连接。

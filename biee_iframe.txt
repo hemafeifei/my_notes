@@ -1,0 +1,17 @@
+<InIFrameRenderingMode>allow</InIFrameRenderingMode>
+<!--This Configuration setting is managed by Oracle Enterprise Manager Fusion Middleware Control-->
+<ClientSessionExpireMinutes>210</ClientSessionExpireMinutes>
+
+  <ContentSecurityPolicy>
+   <PolicyDirectives>
+    <Directive>
+      <Name>frame-src</Name>
+      <Value>*</Value></Directive>
+      <Directive><Name>img-src</Name>
+      <Value>*</Value>
+    </Directive>
+    <Directive><Name>script-src</Name>
+      <Value>*</Value>
+    </Directive>
+   </PolicyDirectives>
+  </ContentSecurityPolicy>

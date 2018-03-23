@@ -1,0 +1,137 @@
+﻿1 升级系统，安装补丁
+yum install epel-release
+yum update
+#重启
+shutdown -r now
+
+2 install R
+yum install R
+
+3 install shiny and other packages
+su - -c "R -e \"install.packages('shiny', repos='https://cran.rstudio.com/')\""
+su - -c "R -e \"install.packages('leaflet', repos='https://cran.rstudio.com/')\""
+#同理安装一些packages
+su - -c "R -e \"install.packages(c('ggplot2','rgdal','RJDBC'), repos='https://cran.rstudio.com/')\""
+su - -c "R -e \"install.packages(c('raster','plotly','data.table'), repos='https://cran.rstudio.com/')\""
+
+4 install shiny-server
+#在官网找到最新的shiny-server的RPM文件
+#https://www.rstudio.com/products/shiny/download-server/
+wget https://download3.rstudio.org/centos5.9/x86_64/shiny-server-1.5.3.838-rh5-x86_64.rpm
+sudo yum install --nogpgcheck shiny-server-1.5.3.838-rh5-x86_64.rpm
+#以上执行完，就成功安装了shiny-server
+
+5 启动服务，停止服务,重启服务,查看服务状态
+systemctl start shiny-server
+systemctl stop shiny-server
+systemctl restart shiny-server
+systemctl status shiny-server
+
+6 设置shiny-server是否随linux服务器开机启动
+systemctl enable shiny-server
+#如果不,则将enable换成disable
+
+7 管理
+/etc/shiny-server/shiny-server.conf 文件可以查询shiny-  server的设置
+例如location/{}里面写的site_dir是 /srv/shiny-server， 就表示shinyApp应该放的路径
+#log文件:
+/var/log/shiny_server.log
+
+8 关闭防火墙
+firewall-cmd --permanent --zone=public --add-port=3838/tcp
+firewall-cmd --reload
+
+9 上传APP并打开
+将shinyApp上传至/srv/shiny-server下面， 就可以从内网其他机器打开172.20.10.xx:3838/shinyApp
+
+10 设置用户dir
+sudo /opt/shiny-server/bin/deploy-example default
+sudo /opt/shiny-server/bin/deploy-example user-dirs
+
+在centos用户下
+#更改用户sudo权限
+(1) 从远程登陆
+ssh root@server_ip
+(2)添加sudo 账户
+adduser username
+passwd username
+(3)修改用户权限
+usermod -aG wheel username
+
+mkdir ~/ShinyApps
+sudo cp -R /opt/shiny-server/samples/sample-apps/hello ~/ShinyApps/
+
+###############
+linux R package
+###############
+
+1 leaflet
+#首先在linux_centos7系统安装其他程序
+yum install libpng12
+yum install libpn g-devel
+#再在R中安装leaflet
+su - -c "R -e \"install.packages('leaflet', repos = 'https://cran-rstudio.com/')\""
+
+2 使用githubinstall安装packages
+install.packages('githubinstall')
+library(githubinstall)
+githubinstall('pkgs')
+
+3 rgdal无法安装,使用raster替代
+ shp <- shapefile("...shp")
+
+ rgdal
+ yum install gdal gdal-devel
+ yum install proj
+ yum install proj-nad
+ yum install proj-epsg
+ yum install proj-devel
+
+ 为了防止devtools包装不上先安装这几个依赖
+
+ yum install libcurl-devel
+
+ yum install openssl-devel
+
+ yum install libxml2-devel
+
+ yum install libcurl
+
+
+ ##############################################
+ r shiny use
+ ##############################################
+ 1 control widgets
+ dateInput()
+
+ 2 renderUI 用法
+ #with renderUI
+ runApp(list(
+   ui = bootstrapPage(
+     selectInput('dataset', 'Choose Dataset', c('mtcars', 'iris')),
+     uiOutput('columns')
+   ),
+   server = function(input, output){
+     output$columns = renderUI({
+       mydata = get(input$dataset)
+       selectInput('columns2', 'Columns', names(mydata))
+     })
+   }
+ ))
+ #with updateSelectInput
+ runApp(list(
+   ui = bootstrapPage(
+     selectInput('dataset', 'Choose Dataset', c('mtcars', 'iris')),
+     selectInput('columns', 'Columns', "")
+   ),
+   server = function(input, output, session){
+     outVar = reactive({
+       mydata = get(input$dataset)
+       names(mydata)
+     })
+     observe({
+       updateSelectInput(session, "columns",
+       choices = outVar()
+     )})
+   }
+ ))

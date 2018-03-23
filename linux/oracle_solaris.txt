@@ -1,0 +1,31 @@
+# install
+用户 jack/jack   root/solaris
+(1)su root  # passwd: solaris
+(2)svcadm enable ssh:default #启动远程登录的SSH服务
+(3)ifconfig -a #显示网络信息
+(4)ssh -X IP-address-of-target -l jack #在远程系统访问GUI窗口
+开始安装
+wei/admin688
+hostname: solaris_wei
+su -设置更新root密码为admin123
+
+#软件包
+pkg list '*toolkit' #显示已安装的软件 (-s显示摘要 -v显示FMRI)
+pkg list -a '*toolkit' #显示可安装的软件
+pkg list -u '*toolkit' #显示可用更新的软件包
+
+#列出组软件包中的所有可安装软件包
+pkg contents -ro type,fmri -t depend solaris-minimal-server
+pkg contents -[t/a/o]
+
+#搜索软件包 pkg search/ pkg contents
+/var/share/pkgrepos/ #公园前测试环境
+
+#安装软件包 pkg install / pkg update
+pkg install -g http://pkg.example1.com/ btool
+
+# 系统信息库ISP
+（1）为新ISP创建ZFS文件系统
+ zfs create -o atime=off rpool/VARSHARE/pkgrepos
+ zfs create rpool/VARSHARE/pkgrepos/solaris
+ zfs get atime rpool/VARSHARE/pkgrepos/solaris

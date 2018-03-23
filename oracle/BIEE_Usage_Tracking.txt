@@ -1,0 +1,13 @@
+BIEE 12C
+将追踪记录写入DEV2_BIPLATFORM schema下的三个表： S_NQ_ACCT, S_NQ_DB_ACCT and S_NQ_INITBLOCK
+(1) RPD中新增DEV2_BIPLATFORM(bieepdb中的1个用户)的连接池，并将上面三个表导入BIEE物理表.
+(2) 保持RPD，不要验证一致性
+(3) 修改BIEE设置，修改前备份原文件。
+    <obiee_home>/user_projects/domains/bi/config/fmwconfig/biconfig/OBIS目录下的NQSConfig.INI
+    a. 在USAAGE_TRACKING中， 将ENABLE=YES。
+    b. 默认值DIRECT_INSERT = YES;保持不变
+    c. 修改PHYSICAL_TABLE_NAME,  = "BieePDB"."DEV2_PLATFORM"."S_NQ_ACCT"
+    d. 修改连接池CONNECTION_POOL = "BieePDB"."BIEEPDB_POOL"
+    e. 可选修改：INIT_BLOCK_TABLE_NAME, INIT_BLOCK_CONNECTION_POOL。其中前者参考c,表名修改为"S_NQ_INITBLOCK",后者与d一致。
+(4) 重启BIEE服务，查询一些仪表盘。
+(5) 使用sql developer查询DEV2_BIPLATFORM下的S_NQ_ACCT表，可以看到相应的记录。

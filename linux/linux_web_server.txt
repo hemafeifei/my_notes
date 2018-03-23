@@ -1,0 +1,25 @@
+1 install httpd
+#查询是否安装了httpd
+rpm -q httpd
+#如果没有
+yum install httpd
+
+2 start the Apache Web Server
+#查看httpd服务状态
+/sbin/service httpd status
+#如果没有running
+su - /sbin/service httpd start
+#如果需要自动启动
+/sbin/chkconfig --level 3 httpd on
+
+修改设置
+/etc/httpd/conf下的httpd.conf文件
+#其中<Directory"var/www">表示html文件
+
+ServerName centos_server.com
+/var/www/下放置文件
+
+
+3 ngrok与shiny-server
+将断口设置了172.20.10.114:3838 -> sunnycentos.ngrok.cc
+通过sunnycentos.ngrok.cc/centos/07_guangzhou_stations就可以访问shiny-server

@@ -1,0 +1,36 @@
+1安装unixODBC 驱动
+#http://www.unixodbc.org/ 下载后解压文件
+tar xvfz unixODBC-2.3.4.tar.gz
+#设置
+./configure --prefix=/usr/local/unixODBC
+make
+make install
+
+2配置环境变量
+export UNIXODBC_DIR=$HOME/local/unixODBC
+export ODBCINI=$UNIXODBC_DIR/etc/odbc.ini
+export ODBCSYSINI=$UNIXODBC_DIR/etc
+
+3安装Oracle instantclient驱动
+#http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html
+instantclient-basic-linux.x64-12.1.0.2.0.zip //必须
+instantclient-sqlplus-linux.x64-12.1.0.2.0.zip //必须
+instantclient-odbc-linux.x64-12.1.0.2.0.zip//此处不需要，为unixODBC连接时，需要使用的包
+
+4 解压安装
+将上面2个文件解压到 /home/centos/Downloads/
+cd /home/centos/Downloads/instantclient_12_1
+ln -s libclntsh.so.12.1 libclntsh.so
+ln -s libocci.so.12.1 libocci.so
+yum install libaio
+
+5 配置环境变量
+export LD_LIBRARY_PATH=/opt/oracle/instantclient_12_1:$LD_LIBRARY_PATH
+export PATH=/home/centos/Downloads/instantclient_12_1:$PATH
+NLS_LANG="AMERICAN_AMERICA.AL32UTF8"
+
+此时 sqlplus dw/Admin123@172.20.10.178:1521/dwpdb 可以连接上数据库
+
+6 更新odbc
+进入instantclient_12_1，运行odbc_update_ini.sh
+./odbc_update_ini.sh /usr/local/unixODBC 会在/root/下更新 .odbc.ini文件

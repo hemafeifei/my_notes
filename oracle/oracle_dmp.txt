@@ -1,0 +1,12 @@
+sqlplus / as sysdba # 管理员登陆
+
+#创建路径
+CREATE OR REPLACE DIRECTORY dir_dump as '/export/home/oracle/biee/dmp/';
+
+#赋予数据库用户权限
+grant read, write on directory dir_dump to DW;
+# 测试数据库连接
+conn dw/Admin123@172.20.10.178:1521:dwpdb 
+
+# 在命令行执行
+expdp dw/Admin123@172.20.10.178:1521/dwpdb schemas=dw directory=dir_dump dumpfile=dw.dmp logfile=expdpDW12C.log

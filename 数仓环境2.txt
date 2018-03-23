@@ -1,0 +1,79 @@
+1. 52�ϵ��û� obiee/obiee123   dwpdb�е� bieepdb/bieepdb123
+
+export ORACLE_HOME=/export/home/obiee/Oracle/product/Oracle_Home/
+export DOMAIN_HOME=/export/home/obiee/Oracle/config/domains/
+export APPLICATION_HOME=/export/home/obiee/Oracle/config/applications/
+
+setenv JAVA_HOME /usr/jdk/instances/jdk1.8.0_144/
+/usr/jdk/instances/jdk1.8.0_144/
+
+ssh oracle@172.18.231.214   Khd873eY
+
+## �������������ļ���ECS213��������214������
+scp /root/Downloads/apache-tomcat-6.0.30.zip oracle@172.18.231.214:/home/oracle/Downloads
+scp /root/Downloads/create_table_sql.zip oracle@172.18.231.214:/home/oracle/Downloads
+scp /root/Downloads/iccs.war oracle@172.18.231.214:/home/oracle/Downloads
+
+scp /root/Downloads/tam_flux_section.zip oracle@172.18.231.214:/home/oracle/Downloads
+
+
+
+/oradata/bigdatademo/
+
+# create tablespace DW datafile '/oradata/bigdatademo/bigdata1.dbf';
+
+# ��½��172.18.231.214���ݿ⣬�ظ���Ӧ��table.
+sqlplus bdata/Ty297Qw^I
+truncate table tam_flux_section;
+@/home/oracle/Downloads/tam_flux_section.sql;
+
+select * from TAM_FLUX_SECTION
+
+120.79.163.8:8080/iccs/screen/20170904/pc/index.html?skin=1
+172.18.231.214:8080/iccs/screen/20170904/pc/index.html
+
+curl 127.0.0.1:8080/iccs/screen/20170904/pc/getTopoData
+
+curl 127.0.0.1:8080/iccs/screen/20170904/pc/getSectionPassenger?startTime=20170901&endTime=20170910&line=0&direction_flag=0&startMin=10&endMin=11
+
+
+select *
+  from (select round(SUM(section_num) / count(DISTINCT squad_date), 0) as data,
+               start_line,
+               start_station,
+               end_line,
+               end_station,
+               direction_flag
+          from tam_flux_section
+         where squad_date > '20170901'
+           and squad_date < '20170910'
+           and time_section >= 1300
+           and time_section < 1400group by start_line, start_station,
+         end_line, end_station, direction_flag
+         order by SUM(section_num) / count(DISTINCT squad_date) desc) a
+ where rownum < 11;
+
+
+select round(SUM(section_num) / count(DISTINCT squad_date), 2) as data,
+       start_line,
+       start_station,
+       end_line,
+       end_station
+  from tam_flux_section
+ where squad_date > '20170901'
+   and squad_date < '20170910'
+   and direction_flag = 0
+   and time_section >= 2200
+   and time_section < 2300
+ group by start_line, start_station, end_line, end_station, direction_flag;
+
+select count(1) from tam_flux_section where squad_date = 20170901;
+select DISTINCT(squad_date) from tam_flux_section;
+
+sqlplus DW/Admin123@dwpdb
+create or replace directory dir_dump as '/export/home/oracle/sqlload';
+grant read,write on directory dir_dump to METRO;
+expdp DW/Admin123@dwpdb dumpfile = tam_flux_section.dmp tables = tam_flux_section query = \" where suqad_date >= 20170901 and squad_date <= 20170910 \";
+expdp DW/Admin123@dwpdb tables = tam_flux_section_day, dumpfile = tam_flux_section_day.dmp;
+expdp DW/Admin123@dwpdb parfile=/u01/par/test.par
+#expdp DW/Admin123@dwpdb tables = tam_flux_section, query = \" where suqad_date >= 20170901 and squad_date <= 20170910 \", dumpfile = tam_flux_section.dmp;

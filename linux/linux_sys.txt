@@ -1,0 +1,173 @@
+# 查看系统信息
+uname -r
+
+#环境变量env variable：
+#全局
+/etc/profile
+/etc/bashrc
+#用户
+~/.bash_profile
+~/.bash_login
+~/.profile
+~/.bashrc #(non-login shell 會讀)
+~/.zshrc #如果有
+~/.ssh/ #用户主目录下存放密匙的文件夹
+
+#install R packages
+su - -c "R -e \"install.packages('shiny', repos = 'http://cran-r.project.org')\""
+
+installed packages :(shiny/rmarkdown/devtools/RJDBC/RODBC/ggplot2/dpylr/rgdal/maps/mapproj/)
+
+#系统依赖
+yum install libpng12
+yum install libpn g-devel
+yum install libcurl-devel
+yum install openssl-devel
+yum install libxml2-devel
+yum install gdal gdal-devel # R GDAL
+#R安装包的一些问题
+install.packages("devtools", dependencies = T)
+library(devtools)
+install_github("twitter/AnomalyDetection")#测试成功
+install.packages('githubinstall')#只需要名字就可以获取
+library(githubinstall)
+githubinstall()
+
+#RJDBC过程
+1.ojdbc8_g.jar安装，并放入当前工作目录
+2.安装 RJDBCS
+library(DBI)
+library(rJava)
+library(RJDBC)
+drv<-JDBC("oracle.jdbc.driver.OracleDriver","ojdbc8_g.jar", identifier.quote="\"")
+conn<-dbConnect(drv,"jdbc:oracle:thin:@172.20.10.178:1521/dwpdb","dw","Admin123")#172.20.10.178
+TAM_TOP10<-dbReadTable(conn,'TAM_TOP10') ##根据连接和表名获取Oracle中的表
+TAM_TOP10<-dbGetQuery(conn,"select * from TAM_TOP10")##根据sql记录获取Oracle中表的数据
+names(table1)=iconv(names(table1),"UTF-8","GBK")  ##若是表中列名为中文， 可用这句来搞定乱码情况
+# DBLINK
+
+#更改用户sudo权限
+(1) 从远程登陆
+ssh root@server_ip
+(2)添加sudo 账户
+adduser username #或者 useradd username
+passwd username
+useradd -u 1500 -g users vbird2 # 新建1个属于users组的用户
+(3)修改用户权限
+usermod -a -G wheel username
+使用root在/etc/sudoers下 将%wheel组的#注释掉，使得wheel组下的用户都可以切换su
+或者直接在root下增加一行 username  ALL  ALL的语句。
+chmod u+w /etc/sudoers # 增加sudoers文件的写入权限
+vim /etc/sudoers
+chmod u-w /etc/sudoers # 去除sudoers文件的写入权限
+然后user用命令 sudo su - ，即可获得root权限进行操作
+
+usermod -e "2015-12-31" vbird2 # 账户过期的日期
+userdel -r vbird2 # 删除用户与主目录
+# 查看用户信息
+id
+
+hadoop教程写的：
+su              # 上述提到的以 root 用户登录
+useradd -m hadoop -s /bin/bash
+passwd hadoop
+visudo #vi 修改hadoop账户的权限和root一样
+
+# linux网络设置
+ip addr 查看mac info
+(172.28.202.0/22 brd 172.28.203.255)
+
+ip route show # 显示路由信息
+(172.28.200.0/22 dev ens33
+192.168.122.0/24 dev virbro)
+default via 172.28.200.254
+
+ip route add 172.28.200.0/22 via 172.28.200.254 dev ens33 # 添加静态路由, 删除的话把add 换成del
+
+/etc/sysconfig/network-scripts/ 下设置网络配置
+service network restart # 重启网络服务 可能需要通过/etc/rc.d/init.d/network stop先停止网络
+systemctl status NetworkManager.service # 查看网络管理服务状态
+
+centos7重启后无法上网的问题：
+systemctl stop NetworkManager
+systemctl disable NetworkManager
+然后通过/etc/rc.d/init.d/network stop先停止网络
+#ip addr flush dev ens33
+再service network restart成功！！(只需要这一句命令!06.09)
+
+#nmtgui 图形化设置网络服务
+#nmcli
+
+
+#解压文件
+（1）zip文件
+unzip filename.zip
+unzip -o -d /home/centos  filename.zip
+(2)tar.gz/tgz文件
+tar -zcvf /pathto/filename.tar.gz # 压缩
+tar -zxf /pathto/hadoop.tar.gz  # 解压
+(3)tar文件
+tar -xf filename.tar -C ~ # 将软件安装在/user/home/下面
+(4)gz文件
+gzip filename.gz
+
+#管理rpm文件
+(1)安装
+sudo rpm -i(vh) pkg.rpm
+直接找到网址去下载
+#wget https://download2.rstudio.org/rstudio-server-rhel-1.0.136-x86_64.rpm
+#sudo yum install --nogpgcheck rstudio-server-rhel-1.0.136-x86_64.rpm -y
+rpm –ivh http://www.linuxcast.net/software.rpm #(支持通过http\ftp协议形式安装)
+(2)查看
+rpm -qa | grep java-1.8.0.rpm
+(3)卸载
+rpm -e java-1.8.0.rpm
+(4)升级
+rpm -U java-1.8.0.rpm
+
+#安装Anaconda
+下载安装.sh文件后在Terminal执行
+conda --version # 查看版本
+conda list # 查看安装的pkgs
+conda update conda #更新包
+conda install anaconda-navigator #安装导览器
+$ anaconda-navigator # 启动图形化导览器
+conda create -n env_name (python2)
+source activate env_name # deactivate
+
+#安装pycharm后不能启动图形化界面，需要安装oracle java_jdk,并设置JAVA_HOME的环境变量。
+
+# yum配置
+/etc/yum.conf
+# 查询已经安装的一些软件
+yum list installed | grep openjdk
+yum remove pkgs #卸载软件
+yum update
+yum search #搜索pkg
+yum update的时候发现进程被占
+netstat -apn  | grep 9999 #查看端口被那个占用
+kill -9 9999
+
+# 查找 whereis/locate/find
+whereis rstudio #查看rstudio被装到什么位置了
+locate
+find
+find /home -name .bashrc
+
+# 查看系统内存
+free -m
+cat /proc/meminfo内存的详细信息
+
+# 查看系统存储
+df -h
+
+# 查看系统挂载
+cat /ect/fstab
+# 加载ISO
+mkdir /data/centos_dvd
+mount -o loop /tmp/CentOS-7.0-1406-x86_64-DVD.iso /data/centos_dvd
+#完毕之后利用df查看挂载情况，使用ll查看文件情况
+df /data/centos_dvd
+ll /data/centos_dvd
+
+/tmp/下查看日志

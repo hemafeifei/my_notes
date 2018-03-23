@@ -1,0 +1,40 @@
+# https://www.unixmen.com/setup-local-yum-repository-centos-7/
+
+(1) 将iso加载到mnt
+mount /dev/cdrom /mnt/
+
+(2) cd /mnt/Packages/
+rpm -ivh vsftpd-3.0.2-9.el7.x86_64.rpm
+systemctl enable vsftpd
+systemctl start vsftpd
+
+# 安装createerepo
+(3)rpm -ivh createrepo-0.9.9-23.el7.noarch.rpm
+
+(4) mkdir /var/ftp/pub/localrepo
+
+(5) 将pkgs复制到新建的localrepo/
+cp -ar /mnt/Packages/*.* /var/ftp/pub/localrepo/
+
+(6) 新建repos.d
+vi /etc/yum.repos.d/localrepo.repo
+
+[localrepo]
+name=Unixmen Repository
+baseurl=file:///var/ftp/pub/localrepo
+gpgcheck=0
+enabled=1
+
+(7)建立localrepo
+createrepo -v /var/ftp/pub/localrepo/
+yum repolist
+yum clean all
+yum update
+
+(8) 删除掉其他repos,否则安装pkg时需要设置参数，例如安装下面的httpd
+yum install --disablerepo="*" --enablerepo="localrepo" httpd
+
+(9)关闭防火墙
+systemctl stop firewalld
+systemctl disable firewalld
+.bashrc

@@ -1,0 +1,69 @@
+# 老高的安装linux-centos7
+https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
+sh -c "$(curl -fsSL https://gist.githubusercontent.com/phpgao/7b2a684de565719a0edd323f659ef678/raw/9e40f9eac6c8a2281a18c676fb5f9a824e4e1485/ss_for_centos7.sh)"
+# 重启ss服务
+systemctl restart shadowsocks-server
+systemctl stop shadowsocks-server
+
+# 重启kcptun服务
+systemctl restart kcp-server
+
+--------------------------------------------------------
+# 配置多用户与流量限制
+https://www.bfdz.ink/2016/11/14/30/
+yum install unzip
+yum install bc
+下载ssh-bash
+wget https://github.com/hellofwy/ss-bash/archive/master.zip
+unzip master.zip
+使用
+cd ss-bash-master/
+./ssadmin.sh h
+
+./ssadmin.sh add 8388 123456 100G
+./ssadmin.sh add 30001 zhengwei2017 50G
+./ssadmin.sh add 30003 yanhongqiang 20G
+./ssadmin.sh add 30009 xiadong 50G
+
+./ssadmin.sh add 30008 wangyang 50G
+./ssadmin.sh start
+./ssadmin.sh soft_restart
+# 用户使用量清零
+ 
+
+
+# 配置开机启动
+vi /etc/rc.local
+/root/ss-bash-master/ssadmin.sh start
+---------------------------------------------------------
+ssserver -c /etc/shadowsocks/config.json -d start 后台启动
+ssserver -c /etc/shadowsocks/config.json -d stop 后台停止
+
+{
+    "server": "139.162.71.205",
+    "local_address":"127.0.0.1",
+    "local_port":1080,
+    "timeout": 300,
+    "method": "chacha20",
+    "port_password": {
+        "30001": "zhengwei2017",
+        "30003": "yanhongqiang"
+    }
+}
+--------------------------------------------------------
+# 设置主机域名
+hostname  www  #设置主机名为www
+
+vi /etc/hostname #编辑配置文件
+
+www   #修改localhost.localdomain为www
+
+:wq!  #保存退出
+
+vi /etc/hosts #编辑配置文件
+
+127.0.0.1   localhost  www   #修改localhost.localdomain为www
+
+:wq!  #保存退出
+
+shutdown -r now  #重启系统

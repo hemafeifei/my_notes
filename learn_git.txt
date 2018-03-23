@@ -1,0 +1,42 @@
+git init
+git add '*.txt'
+git commit -m "add a txt file"
+
+# 修改txt文件之后检查
+git status # 可以看到修改
+git diff readme.txt  # 看看哪里做了修改
+git add readme.txt  # 再次提交
+git status # 可以看到修好已经被确认
+git commit -m "add java"
+
+git log  # 查看所有的修改记录
+git log --pretty=oneline # 修改显示方式
+
+git reset --hard HEAD~2 # 修改到HEAD前2次状态
+git reset --hard e9572  # 回到commit id = e9572*的状态
+
+git reflog # 查询所有的操作记录。
+
+git checkout -- readme.txt # 撤销上一次修改
+git rm test.txt # 从版本库删除一个文件
+
+########
+远程仓库
+########
+
+# 在github 将机器的ssh key添加进去
+https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
+(1) windows 使用git bash工具
+ssh-keygen -t rsa -b 4096 -C "zhengwei8618@gmail.com" #后面一路Enter
+(2)
+eval $(ssh-agent -s) # 得到一个 Agent pid
+ssh-add ~/.ssh/id_rsa
+(3) ssh key添加到git hub账户
+clip < ~/.ssh/id_rsa.pub # 复制到了剪切板
+
+# 在github创建一个repo, named test
+# 从本地把repo
+git remote set-url origin git@github.com:hemafeifei/test.git
+git remote add origin git@github.com:hemafeifei/test.git
+# git remote -v # 查看远程连接情况
+git push -u origin master

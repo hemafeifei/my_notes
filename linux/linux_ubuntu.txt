@@ -1,0 +1,63 @@
+#软件包管理
+sudo apt install synaptic # 安装第三方工具
+
+sudo apt install packagename
+sudo apt remove packagename
+sudo apt update #升级软件包
+sudo apt upgrade #升级系统
+apt help
+apt search pkgs
+apt show pkgs
+apt list-installed
+apt list-upgradable
+
+#用户管理
+sudo passwd # 解锁root
+sudo passwd -l root 锁定root
+
+sudo adduser <username>
+#sudo adduser wei sudo # 将用户添加到sudo组
+vi /etc/sudoers 查看并修改相应的权限
+sudo deluser <username>
+
+# 网络
+1、在终端运行：sudo gedit /etc/modprobe.d/iwlwifi.conf
+2、在打开的这个配置文件中空白处添加：options iwlwifi 11n_disable=1
+
+官方解答：升级系统
+sudo apt update
+sudo apt dist-upgrade
+reboot如果问题还存在：
+sudo apt install pastebinit
+执行下面命令
+wget -N -t 5 -T 10 https://github.com/UbuntuForums/wireless-info/raw/master/wireless-info && \
+chmod +x wireless-info && \
+./wireless-info
+wget -N -t 5 -T 10 https://github.com/UbuntuForums/wireless-info/raw/master/wireless-info && \
+chmod +x wireless-info && \
+./wireless-info
+# ubuntu 用户提交的dell工程师方案
+sudo mkdir -p /lib/firmware/ath10k/QCA6174/hw3.0/
+sudo wget -O /lib/firmware/ath10k/QCA6174/hw3.0/board.bin https://github.com/FireWalkerX/ath10k-firmware/blob/7e56cbb94182a2fdab110cf5bfeded8fd1d44d30/QCA6174/hw3.0/board-2.bin?raw=true
+sudo wget -O /lib/firmware/ath10k/QCA6174/hw3.0/firmware-4.bin https://github.com/FireWalkerX/ath10k-firmware/blob/7e56cbb94182a2fdab110cf5bfeded8fd1d44d30/QCA6174/hw3.0/firmware-4.bin_WLAN.RM.2.0-00180-QCARMSWPZ-1?raw=true
+sudo chmod +x /lib/firmware/ath10k/QCA6174/hw3.0/*
+
+# SSH
+(1) sudo apt install openssh-server
+(2) sudo service ssh status
+(3) sudo gedit /etc/ssh/sshd_config
+(4) sudo service ssh restart
+
+Ubuntu操作基本快捷键
+* 打开主菜单 = Alt + F1
+* 运行 = Alt + F2
+* 显示桌面 = Ctrl + Alt + d
+* 最小化当前窗口 = Alt + F9
+* 最大化当前窗口 = Alt + F10
+* 关闭当前窗口 = Alt + F4
+* 截取全屏 = Print Screen
+* 截取窗口 = Alt + Print Screen
+默认特殊快捷键
+* 展示所有窗口程序 = F10
+* 展示当前窗口最上层程序 = F11
+* 展示当前窗口所有程序 = F12
