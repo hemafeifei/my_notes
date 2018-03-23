@@ -6,10 +6,12 @@ git commit -m "add a txt file"
 git status # 可以看到修改
 git diff readme.txt  # 看看哪里做了修改
 git add readme.txt  # 再次提交
+git add . # Add all current changes to the next commit
 git status # 可以看到修好已经被确认
 git commit -m "add java"
 
 git log  # 查看所有的修改记录
+git log -p <file> # 查看特定文件的修改
 git log --pretty=oneline # 修改显示方式
 
 git reset --hard HEAD~2 # 修改到HEAD前2次状态
@@ -74,3 +76,9 @@ git tag # 查看标签
 # git log 查询到之前的commit id
 git tag v0.9 62274e
 git tag -d v1.0 # 删除标签
+
+# 忽略特殊文件
+在根目录的.gitignore文件里添加要忽略的文件名
+# 配置别名alias
+git config --global alias.st status
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
