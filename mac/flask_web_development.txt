@@ -1,0 +1,32 @@
+# work with the example code
+git clone https://github.com/miguelgrinberg/flasky.git
+
+# checkout the initial release of the application
+git checkout 1a
+
+# reset
+git reset --hard
+
+# refresh
+git fetch --all
+git fetch --tags
+git fetch --hard origin/master
+
+# view the difference of 2 verisons
+git diff 2a 2b
+
+# Chapter 1 Installation
+cd Learning_flask/
+git clone https://github.com/miguelgrinberg/flasky.git
+cd flasky/
+source activate flask_env
+pip install flask
+
+# Chapter 2 Basic Application Structure
+--Initialization
+from flask import Flask
+app = Flask(__name__)
+--Routes and View Functions
+@app.route('/')
+def index():
+  return '<h1>Hello World!</h1>'
