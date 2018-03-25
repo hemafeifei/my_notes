@@ -88,3 +88,8 @@ git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Crese
 # 在Mac上有.DS_Store文件问题
 切换到所在目录
 find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+
+# git bash for Mac, install
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/fabriziocucci/git-bash-for-mac/master/install.sh)"
+# uninstall
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/fabriziocucci/git-bash-for-mac/master/uninstall.sh)"
