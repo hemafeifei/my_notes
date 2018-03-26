@@ -1,0 +1,46 @@
+
+setwd()  #设置当前工作目录，其中\要用\\代替
+getwd()  #查看当前工作目录
+data<-read.table(file.choose())  #会弹出对话框让你选择文件位置。Excel文件要先另存为.CSV格式
+
+data <- read.table("clipboard", header = T)
+> ggplot(data, aes(age, salary)) + geom_point(colour = "blue")
+> ggsave("plot1.png", dpi=600) # 保存图片
+
+install.packages("E:/R_package/RbaiduMaps_0.1.tar.gz", repos = NULL, type = "source")# 安装百度地图API
+
+##用googleVis包的另一种方法/交互式##
+——————————————————————————————
+删除数据中的1列
+数据Datatest
+Datatest = Datatest[,-1]
+就删除第一列
+-2就删除第二列
+依次类推。
+
+//*[@id="content"]/div/div[1]/div/div/table[1]/tbody/tr/td[2]/div/p
+//*[@id="content"]/div/div[1]/div/div/table[2]/tbody/tr/td[2]/div/p
+//*[@id="content"]/div/div[1]/div/div/table[1]/tbody/tr/td[2]/div/div/span[3]
+
+amap_key:
+e6dac96374f06744d169e51fb4523ed5
+
+ggmap_key:
+AIzaSyC1QzW172GoeqGVh8qJFMhvV8CTv1NJB9s
+
+yiman_key:
+AIzaSyCC8uSvj5EiHiWiHYc0ROKj_p2GT5pH3XY
+
+google map api key
+AIzaSyDYuEeiDHlQy9JKjTh_14P-lX47eUkaX-k
+
+baiduMapAPI key
+XatGhUNrLFLMLrfKQsbMDy5K
+
+tfl london
+pwd : APL@tfl123
+appid : b2ff2378
+key : cfab56e26ae588c011e515b9501040bd
+
+
+stations 站点数
