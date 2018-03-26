@@ -44,6 +44,9 @@ git remote add origin git@github.com:hemafeifei/test.git
 
 # git remote -v # 查看远程连接情况
 git push -u origin master
+
+# git pull
+git pull origin next:master # 从远程获取next分支与本地master分支合并
 ---从远程库克隆---
 # 新建一个开发项目时，在github新建一个repo,并选择初始化with readme
 # 在本地克隆
