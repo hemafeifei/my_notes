@@ -1,0 +1,37 @@
+mkdir 4sea  && cd 4sea
+conda create -n foursea python=3.6.4
+source activate foursea
+$ touch app.py .gitignore README.md requirements.txt
+pip install Flask
+pip freeze > requirements.txt
+
+touch Procfile
+# create a pro heroku app
+heroku create heroku-4sea-pro
+# create an app for staging
+heroku create heroku-4sea-stage
+# add app to git remotes
+git remote add pro git@heroku.com:heroku-4sea-pro.git
+git remote add stage git@heroku.com:heroku-4sea-stage.git
+
+# 将本机的ssh key 添加到heroku
+heroku keys:add ~/.ssh/id_rsa.pub
+heroku keys:add C:/Users/wei/.ssh\id_rsa
+git push -u stage master
+
+# 新建配置文件,并加入
+touch config.py
+
+# 修改本地设置，实现切入4sea文件夹就启动虚拟环境
+deactivate
+pip install autoenv==1.0.0
+touch .env
+# 膝盖.env文件，加入：
+source activate env_4sea
+export APP_SETTINGS="config.DevelopmentConfig"
+#执行shell命令使设置生效
+$ echo "source `which activate.sh`" >> ~/.bashrc
+$ source ~/.bashrc
+
+
+heroku run python app.py --app heroku-4sea-stage
