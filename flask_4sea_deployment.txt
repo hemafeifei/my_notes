@@ -44,3 +44,4 @@ $ heroku config:set APP_SETTINGS=config.StagingConfig --remote stage
 $ heroku config:set APP_SETTINGS=config.StagingConfig --remote pro
 
 heroku run python app.py --app heroku-4sea-stage
+# view heroku: heroku-4sea-stage.herokuapp.com
