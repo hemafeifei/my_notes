@@ -432,3 +432,357 @@ proc report data=style.natparks nowindows;
 	endcomp;
 	title "Report with two Computed Variables";
 run;
+
+***********************************************
+-- MODIFY AND COMBINING DATA
+***********************************************
+libname style '/folders/myfolders/.sasstudio';
+
+data style.trains;
+	infile '/folders/myfolders/Train.dat';
+	input Time time5. Cars People;
+run;
+
+***********************************************
+-- MODIFY DATA WITH SET STATEMENTS
+data averagetrain;
+	set style.trains;
+	PeoplePerCar = People / Cars;
+run;
+
+proc print data=averagetrain;
+	title "Average Number of People per Train";
+	format Time time5. PeoplePerCar 6.2;
+run;
+
+***********************************************
+-- STACKING DATA
+data southentrance;
+	infile '/folders/myfolders/South.dat';
+	input Entrance $ PassNumber PartySize Age;
+proc print data=southentrance;
+	title "South Entrance Data";
+run;
+
+data northentrance;
+	infile '/folders/myfolders/North.dat';
+	input Entrance $ PassNumber PartySize Age Lot;
+proc print data=northentrance;
+	title "North Entrance Data";
+run;
+
+data both;
+	set southentrance northentrance;
+	if age = . then AmountPay = 0;
+	else if age < 3 then AmountPay = 0;
+	else if age < 65 then AmountPay = 35;
+	else AmountPay = 27;
+run;
+proc print data=both;
+	title "Both Entrance";
+run;
+
+***********************************************
+data southentrance;
+	infile '/folders/myfolders/South.dat';
+	input Entrance $ PassNumber PartySize Age;
+proc print data=southentrance;
+	title "South Entrance Data";
+run;
+
+data northentrance;
+	infile '/folders/myfolders/North.dat';
+	input Entrance $ PassNumber PartySize Age Lot;
+proc sort data=northentrance;
+	by passnumber;
+/* must sort first */
+proc print data=northentrance;
+	title "North Entrance Data";
+run;
+data interleave;
+	set southentrance northentrance;
+	by passnumber;
+run;
+proc print data=interleave;
+	title "Both Entrances, by Pass Number";
+run;
+
+***********************************************
+-- MERGE DATA ONE TO ONE
+data descriptions;
+	infile '/folders/myfolders/Chocolate.dat' truncover;
+	input codenum $ 1-4 Name $ 6-14 Description $ 16-60;
+run;
+
+data sales;
+	infile '/folders/myfolders/Chocsales.dat';
+	input codenum $ 1-4 PiecesSold 6-7;
+proc sort data=sales;
+	by codenum;
+run;
+/* MERGE DATA */
+data style.chocolates;
+	merge sales descriptions;
+	by codenum;
+run;
+
+proc print data=style.chocolates;
+	title "Today's Chocolate Sales";
+run;
+
+***********************************************
+-- MERGE DATA ONE TO MANY
+data regular;
+	infile '/folders/myfolders/Shoe.dat';
+	input Style $ 1-15 ExerciseType $ RegularPrice;
+run;
+proc sort data=regular;
+	by ExerciseType;
+run;
+
+data discount;
+	infile '/folders/myfolders/Disc.dat';
+	input ExerciseType $ Adjustment;
+run;
+
+data prices;
+	merge regular discount;
+	by ExerciseType;
+	NewPrice = round(RegularPrice*(1-Adjustment), .01);
+run;
+
+proc print data=prices;
+	title "Price List for May Discount";
+run;
+
+***********************************************
+-- MERGE DATA WITH ORIGINAL DATA
+data shoes;
+	infile '/folders/myfolders/Shoesales.dat';
+	input Style $ 1-15 ExerciseType $ Sales;
+run;
+proc sort data=shoes;
+	by ExerciseType;
+run;
+
+proc means noprint data=shoes;
+	var Sales;
+	by ExerciseType;
+	output out = summarydata sum(Sales) = Total;
+run;
+proc print data=summarydata;
+	title "Summary data set";
+run;
+
+data shoessummary;
+	merge shoes summarydata;
+	by ExerciseType;
+	Percent = Sales / Total * 100;
+run;
+
+proc print data=shoessummary;
+	by ExerciseType;
+	ID ExerciseType;
+	var Style Sales Total Percent;
+	title "Sales Share by Type of Exercise";
+run;
+
+***********************************************
+-- UPDATE DATA WITH transactions
+LIBNAME perm '/folders/myfolders/.sasstudio';
+data perm.patientmaster;
+	infile '/folders/myfolders/Admit.dat';
+	input Account LastName $ 8-16 Address $17-34
+		BirthDate mmddyy10. Sex $ InsCode $ 48-50 @52 LastUpdate mmddyy10.;
+run;
+
+data transactions;
+	infile '/folders/myfolders/NewAdmit.dat';
+	input Account LastName $ 8-16 Address $17-34
+		BirthDate mmddyy10. Sex $ InsCode $ 48-50 @52 LastUpdate mmddyy10.;
+run;
+proc sort data=transactions;
+	by Account;
+run;
+
+data perm.patientmaster;
+	update perm.patientmaster transactions;
+	by Account;
+run;
+proc print data=perm.patientmaster;
+	format BirthDate LastUpdate mmddyy10.;
+	title "Admissions Data";
+run;
+
+***********************************************
+-- output MULTIPLE DATA
+data morning afternoon;
+	infile '/folders/myfolders/Zoo.dat';
+	input Animal $ 1-9 Class $ 11-18 Enclosures $ FeedTime $;
+	if FeedTime = 'am' then output morning;
+		else if FeedTime = 'pm' then output afternoon;
+		else if FeedTime = 'both' then output;
+run;
+
+proc print data=morning;
+	title "Animals with Morning Feedings";
+proc print data=afternoon;
+	title "Animals with Afternoon Feedings";
+run;
+
+***********************************************
+-- OUTPUT DATA WITH LINES
+data theaters;
+	infile '/folders/myfolders/Movies.dat';
+	input Month $ Location $ Tickets @;
+	output;
+	input Location $ Tickets @;
+	output;
+	input Location $ Tickets;
+	output;
+run;
+proc print data=theaters;
+	title "Ticket Sales";
+run;
+
+***********************************************
+-- SELECTING OBSERVATIONS WITH "IN"
+data customer;
+	infile '/folders/myfolders/CustAddress.dat' truncover;
+	input CustomerNumber Name $ 5-21 Address $ 23-42;
+
+data orders;
+	infile '/folders/myfolders/OrdersQ3.dat';
+	input CustomerNumber Total;
+proc sort data=orders;
+	by CustomerNumber;
+run;
+
+data noorders;
+	merge customer orders (in = Recent);
+	by CustomerNumber;
+	if Recent = 0;
+run;
+
+proc print data=noorders;
+	title "Customers with No Orders in the Third Quarter";
+run;
+
+***********************************************
+-- SELECTING OBSERVATIONS WITH "WHERE"
+data tallpeaks (where=(Height>6000))
+	 american (where=(Continent contains('America')));
+	 infile '/folders/myfolders/Mountains.dat';
+	 input Name $1-14 Continent $15-28 Height;
+run;
+
+proc print data=tallpeaks;
+	title "Members of the Seven Summits above 6,000 Meters";
+run;
+proc print data=american;
+	title "Members of the Seven Summits in the Americas";
+run;
+
+***********************************************
+-- 7.MACROS
+***********************************************
+/* SUBSTITUTING TEXT WITH MACRO VARIABLES */
+%LET flowertype = Ginger;
+
+data flowersales;
+	infile '/folders/myfolders/TropicalFlowers.dat';
+	input CustomerID $4. @6 SaleDate mmddyy10. @17 Variety $9.
+			SaleQiantity SaleAmount;
+	if Variety = "&flowertype";
+run;
+
+proc print data=flowersales;
+	format SaleDate worddate18. SaleAmount dollar7.;
+	title "Sales of &flowertype";
+run;
+
+***********************************************
+-- MODULAR CODE WITH MACROS
+%MACRO sample;
+	proc sort data=flowersales;
+		by descending SaleQuantity;
+	run;
+	proc print data=flowersales (obs=5);
+		format SaleDate worddate18. SaleAmount dollar7.;
+		title "Five Largest Sales by Quantity";
+	run;
+%MEND sample;
+
+/* read the flowers data */
+data flowersales;
+	infile '/folders/myfolders/TropicalFlowers.dat';
+	input CustomID $4. @6 SaleDate mmddyy10. @17 Variety $9.
+			SaleQuantity SaleAmount;
+run;
+
+%sample
+
+***********************************************
+/* Adding Parameters to Macros */
+%MACRO select (customer=, sortvar=);
+	proc sort data=flowersales out=salesout;
+		by &sortvar;
+		where CustomerID = "&customer";
+	run;
+	proc print data=salesout;
+		format SaleDate worddate18. SaleAmount dollar7.;
+		title1 "Orders for Customer Number &customer";
+		title2 "Sorted by &sortvar";
+	run;
+%Mend select;
+
+/* read the flowers data */
+data flowersales;
+	infile '/folders/myfolders/TropicalFlowers.dat';
+	input CustomerID $4. @6 SaleDate mmddyy10. @17 Variety $9.
+			SaleQuantity SaleAmount;
+run;
+
+/* Invoke the macro */
+%select (customer=356W, sortvar = SaleQuantity)
+%select (customer=240W, sortvar = Variety)
+
+***********************************************
+/* Writing Macros with Conditional Logic */
+%macro dailyreports;
+	%if &sysday = Saturday %then %do;
+		proc print data=flowersales;
+		format SaleDate worddate18. SaleAmount dollar7.;
+		title "Saturday Report: Current Flower Sales";
+	run;
+	%end;
+	%else %if &sysday = Tuesday %then %do;
+		proc means data=flowersales mean min max;
+		class Variety;
+		var SaleQuantity;
+		title "Tuesday Report: Summary of Flower Sales";
+	run;
+	%end;
+%mend dailyreports;
+
+data flowersales;
+	infile '/folders/myfolders/TropicalFlowers.dat';
+	input CustomerID $4. @6 SaleDate mmddyy10. @17 Variety $9.
+			SaleQuantity SaleAmount;
+run;
+
+%dailyreports;
+
+***********************************************
+/* MACROS WITH CALL SYMPUT */
+data _NULL_;
+	set flowersales;
+	if _N_ = 1 then call symput ("selectedcustomer", CustomerID);
+	else Stop;
+run;
+
+proc print data=flowersales;
+	where CustomerID = "&selectedcustomer";
+	format SaleDate worddate18. SaleAmount dollar7.;
+	title "Customer &selectedcustomer Had the Single Largest Order";
+run;
