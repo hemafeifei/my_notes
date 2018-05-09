@@ -19,3 +19,7 @@ source deactive
 conda remove -n $py27 $package_name
 # 移除虚拟环境
 conda remove -n yourenvname --all
+
+
+# Install lightgbm
+conda install -c conda-forge lightgbm 
