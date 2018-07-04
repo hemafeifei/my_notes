@@ -1,0 +1,19 @@
+# http://www.cnblogs.com/peida/archive/2013/01/08/2850483.html
+
+crontab -e
+
+* * * * *  command to execute
+│ │ │ │ │
+│ │ │ │ └─── day of week (0 - 6) (0 to 6 are Sunday to Saturday, or use names; 7 is Sunday, the same as 0)
+│ │ │ └──────── month (1 - 12)
+│ │ └───────────── day of month (1 - 31)
+│ └────────────────── hour (0 - 23)
+└─────────────────────── min (0 - 59)
+
+env EDITOR=vim crontab -e
+PATH=/Users/weizheng/anaconda/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
+# */3 14 30 06 * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python automation.py
+
+* 10 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_match.py
+* 14 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_votes.py
+*/20  15-23 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_odds.py
