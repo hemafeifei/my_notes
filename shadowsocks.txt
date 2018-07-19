@@ -3,6 +3,7 @@ test in git
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
 sh -c "$(curl -fsSL https://bit.ly/2GppK6X)"
 
+systemctl enable shadowsocks-server
 # 重启ss服务
 systemctl restart shadowsocks-server
 systemctl stop shadowsocks-server
@@ -11,7 +12,8 @@ systemctl status shadowsocks-server
 # 重启kcptun服务
 systemctl restart kcp-server
 --------------------------------------------------------
-
+2018-07-13
+*****https://teddysun.com/342.html*****
 wget --no-check-certificate -O shadowsocks.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh
 
 chmod +x shadowsocks.sh
@@ -27,6 +29,15 @@ chmod +x shadowsocks.sh
 
 --------------------------------------------------------
 # 配置多用户与流量限制
+1)https://www.rosehosting.com/blog/how-to-install-plsython-3-6-4-on-centos-7
+2)
+pip3.6 install shadowsocks  successed!! 然后又失败了
+
+
+ssserver -s 176.58.112.63 -p 30000 -k zhengwei -m camellia-128-cfb --user nobody -d start
+ssserver -d stop
+
+3)
 https://www.bfdz.ink/2016/11/14/30/
 yum install unzip bc
 下载ss
@@ -36,7 +47,7 @@ unzip master.zip
 cd ss-bash-master/
 ./ssadmin.sh h
 
-./ssadmin.sh add 8388 123456 100G
+./ssadmin.sh add 8388 123456 100G/etc
 ./ssadmin.sh add 30001 zhengwei2017 50G
 ./ssadmin.sh add 30003 yanhongqiang 20G
 ./ssadmin.sh add 30009 xiadong 50G

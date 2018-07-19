@@ -11,9 +11,13 @@ crontab -e
 └─────────────────────── min (0 - 59)
 
 env EDITOR=vim crontab -e
+
 PATH=/Users/weizheng/anaconda/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin
 # */3 14 30 06 * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python automation.py
 
 * 10 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_match.py
 * 14 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_votes.py
 */20  15-23 * * * cd /Users/weizheng/PycharmProjects/football/01-jingcai/ && python get_lottery_odds.py
+
+
+'http://info.sporttery.cn/football/match_result.php?page=2&search_league=0&start_date=2018-04-20&end_date=2018-04-22&dan='
