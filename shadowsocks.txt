@@ -1,4 +1,3 @@
-test in git
 # 老高的安装linux-centos7
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
 sh -c "$(curl -fsSL https://bit.ly/2GppK6X)"
@@ -15,17 +14,19 @@ systemctl restart kcp-server
 2018-07-13
 *****https://teddysun.com/342.html*****
 wget --no-check-certificate -O shadowsocks.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks.sh
-
 chmod +x shadowsocks.sh
-
 ./shadowsocks.sh 2>&1 | tee shadowsocks.log
-
 ./shadowsocks.sh uninstall # uninstall
-
 启动：/etc/init.d/shadowsocks start
 停止：/etc/init.d/shadowsocks stop
 重启：/etc/init.d/shadowsocks restart
 状态：/etc/init.d/shadowsocks status
+
+-- KCPTUN
+wget https://github.com/xtaci/kcptun/releases/download/v20180316/kcptun-linux-amd64-20180316.tar.gz
+./server_linux_amd64 -t "127.0.0.1:30000" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
+./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30000 --crypt aes-128 --key jumbojet
+sudo netstat -tulpn | grep 4000
 
 --------------------------------------------------------
 # 配置多用户与流量限制
@@ -33,8 +34,8 @@ chmod +x shadowsocks.sh
 2)
 pip3.6 install shadowsocks  successed!! 然后又失败了
 
-
-ssserver -s 176.58.112.63 -p 30000 -k zhengwei -m camellia-128-cfb --user nobody -d start
+ssserver -s 155.94.186.238 -p 30001 -k zhengwei -m camellia-128-cfb --user nobody -d start
+ssserver -s 178.79.134.128 -p 30001 -k zhengwei -m chacha20 --user nobody -d start
 ssserver -d stop
 
 3)
@@ -45,22 +46,17 @@ wget https://github.com/hellofwy/ss-bash/archive/master.zip
 unzip master.zip
 使用
 cd ss-bash-master/
-./ssadmin.sh h
+./ssadmin.sh -h
 
 ./ssadmin.sh add 8388 123456 100G/etc
 ./ssadmin.sh add 30001 zhengwei2017 50G
-./ssadmin.sh add 30003 yanhongqiang 20G
-./ssadmin.sh add 30009 xiadong 50G
-
-./ssadmin.sh add 30008 wangyang 50G
 ./ssadmin.sh start
 ./ssadmin.sh soft_restart
 # 用户使用量清零
- 
 
 
 # 配置开机启动
-vi /etc/rc.local
+Sudo vi /etc/rc.local
 /root/ss-bash-master/ssadmin.sh start
 ---------------------------------------------------------
 ssserver -c /etc/shadowsocks/config.json -d start 后台启动
@@ -80,7 +76,6 @@ ssserver -c /etc/shadowsocks/config.json -d stop 后台停止
 --------------------------------------------------------
 # 设置主机域名
 hostname  www  #设置主机名为www
-
 vi /etc/hostname #编辑配置文件
 
 www   #修改localhost.localdomain为www
@@ -94,8 +89,6 @@ vi /etc/hosts #编辑配置文件
 :wq!  #保存退出
 
 shutdown -r now  #重启系统
-
-
 
 MTY:
 {
