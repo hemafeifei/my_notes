@@ -10,6 +10,22 @@ systemctl status shadowsocks-server
 
 # 重启kcptun服务
 systemctl restart kcp-server
+
+# 卸载ss
+systemctl stop shadowsocks-server
+systemctl disable shadowsocks-server
+rm -f /etc/ss-config.json /etc/systemd/system/shadowsocks-server.service
+systemctl daemon-reload
+
+
+MTY:
+{
+    "server_port":49999,
+    "password":"ZGRiMGI0NmI1",
+    "timeout":60,
+    "method":"rc4-md5"
+}
+
 --------------------------------------------------------
 2018-07-13
 *****https://teddysun.com/342.html*****
@@ -56,7 +72,7 @@ cd ss-bash-master/
 
 
 # 配置开机启动
-Sudo vi /etc/rc.local
+sudo vi /etc/rc.local
 /root/ss-bash-master/ssadmin.sh start
 ---------------------------------------------------------
 ssserver -c /etc/shadowsocks/config.json -d start 后台启动
@@ -89,11 +105,3 @@ vi /etc/hosts #编辑配置文件
 :wq!  #保存退出
 
 shutdown -r now  #重启系统
-
-MTY:
-{
-    "server_port":56653,
-    "password":"ZGRiMGI0NmI1",
-    "timeout":60,
-    "method":"rc4-md5"
-}
