@@ -1,3 +1,8 @@
+MTY1: 老高 root/do**780
+MTY2: 老高 144.172.124.191
+linode: teddysun@2018-12-28
+
+
 # 老高的安装linux-centos7
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
 sh -c "$(curl -fsSL https://bit.ly/2GppK6X)"
@@ -40,7 +45,7 @@ chmod +x shadowsocks.sh
 
 -- KCPTUN
 wget https://github.com/xtaci/kcptun/releases/download/v20180316/kcptun-linux-amd64-20180316.tar.gz
-./server_linux_amd64 -t "127.0.0.1:30000" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
+./server_linux_amd64 -t "127.0.0.1:11364" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
 ./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30000 --crypt aes-128 --key jumbojet
 sudo netstat -tulpn | grep 4000
 
@@ -50,7 +55,7 @@ sudo netstat -tulpn | grep 4000
 2)
 pip3.6 install shadowsocks  successed!! 然后又失败了
 
-ssserver -s 155.94.186.238 -p 30001 -k zhengwei -m camellia-128-cfb --user nobody -d start
+ssserver -s 172.105.221.193 -p 30001 -k zhengwei -m camellia-128-cfb --user nobody -d start
 ssserver -s 178.79.134.128 -p 30001 -k zhengwei -m chacha20 --user nobody -d start
 ssserver -d stop
 
