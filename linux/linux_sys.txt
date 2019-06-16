@@ -1,4 +1,4 @@
-# 查看系统信息
+z# 查看系统信息
 uname -r
 
 #环境变量env variable：
@@ -105,6 +105,7 @@ unzip filename.zip
 unzip -o -d /home/centos  filename.zip
 (2)tar.gz/tgz文件
 tar -zcvf /pathto/filename.tar.gz # 压缩
+tar -czvf archive.tar.gz stuff
 tar -zxf /pathto/hadoop.tar.gz  # 解压
 (3)tar文件
 tar -xf filename.tar -C ~ # 将软件安装在/user/home/下面

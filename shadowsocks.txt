@@ -1,6 +1,7 @@
-MTY1: 老高 root/do**780
 MTY2: 老高 144.172.124.191
 linode: teddysun@2018-12-28
+hosthatch: 老高failed then teddysun@2019-05-18 103.73.66.133
+hostXen: root@45.248.87.193 /a82551c361
 
 
 # 老高的安装linux-centos7
@@ -45,8 +46,8 @@ chmod +x shadowsocks.sh
 
 -- KCPTUN
 wget https://github.com/xtaci/kcptun/releases/download/v20180316/kcptun-linux-amd64-20180316.tar.gz
-./server_linux_amd64 -t "127.0.0.1:11364" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
-./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30000 --crypt aes-128 --key jumbojet
+./server_linux_amd64 -t "127.0.0.1:30001" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
+./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30001 --crypt chacha20 --key 4sea.club
 sudo netstat -tulpn | grep 4000
 
 --------------------------------------------------------
@@ -110,3 +111,22 @@ vi /etc/hosts #编辑配置文件
 :wq!  #保存退出
 
 shutdown -r now  #重启系统
+
+----------------------------------------------------------
+Vultr speed test: 12Jun2019
+
+--- ams-nl-ping.vultr.com ping statistics ---
+26 packets transmitted, 25 packets received, 3.8% packet loss
+round-trip min/avg/max/stddev = 227.820/249.959/330.037/34.471 ms
+
+--- lon-gb-ping.vultr.com ping statistics ---
+31 packets transmitted, 27 packets received, 12.9% packet loss
+round-trip min/avg/max/stddev = 206.538/209.019/212.115/1.339 ms
+
+--- fra-de-ping.vultr.com ping statistics ---
+30 packets transmitted, 29 packets received, 3.3% packet loss
+round-trip min/avg/max/stddev = 232.723/233.924/235.920/0.925 ms
+
+--- hnd-jp-ping.vultr.com ping statistics ---
+30 packets transmitted, 30 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 220.146/230.448/236.931/4.266 ms
