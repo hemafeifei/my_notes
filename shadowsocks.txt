@@ -3,6 +3,12 @@ linode: teddysun@2018-12-28
 hosthatch: 老高failed then teddysun@2019-05-18 103.73.66.133
 hostXen: root@45.248.87.193 /a82551c361
 
+--------------------------------------------------------
+# Azure container
+az group create --name WeiSSR --location eastus
+az container create -g WeiSSR --name shadowsocks1 --image oddrationale/docker-shadowsocks --ip-address public --ports 8388 --command-line "/usr/local/bin/ssserver -k password1"
+az container logs --resource-group WeiSSR --name shadowsocks1
+--------------------------------------------------------
 
 # 老高的安装linux-centos7
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678

@@ -52,9 +52,9 @@ ssh root@server_ip
 (2)添加sudo 账户
 adduser username #或者 useradd username
 passwd username
-useradd -u 1500 -g users vbird2 # 新建1个属于users组的用户
+sudo usermod -aG wheel username
+# useradd -u 1500 -g users vbird2 # 新建1个属于users组的用户
 (3)修改用户权限
-f
 使用root在/etc/sudoers下 将%wheel组的#注释掉，使得wheel组下的用户都可以切换su
 或者直接在root下增加一行 username  ALL  ALL的语句。
 chmod u+w /etc/sudoers # 增加sudoers文件的写入权限
