@@ -1,5 +1,27 @@
-z# 查看系统信息
+sudo -i
+
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+yum install yum-plugin-fastestmirror
+# 查看系统信息
 uname -r
+# install linux-4.10
+yum --enablerepo=elrepo-kernel install kernel-ml
+# https://www.howtoforge.com/tutorial/how-to-upgrade-kernel-in-centos-7-server/
+autoremove
+reboot
+# 查看系统信息
+uname -r
+yum install yum-utils
+
+
+
+
+
+
+
+
+
 
 #环境变量env variable：
 #全局

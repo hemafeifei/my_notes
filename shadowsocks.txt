@@ -37,7 +37,6 @@ MTY:
     "timeout":60,
     "method":"rc4-md5"
 }
-
 --------------------------------------------------------
 2018-07-13
 *****https://teddysun.com/342.html*****
@@ -117,22 +116,25 @@ vi /etc/hosts #编辑配置文件
 :wq!  #保存退出
 
 shutdown -r now  #重启系统
-
 ----------------------------------------------------------
-Vultr speed test: 12Jun2019
+update linux 4.10
 
---- ams-nl-ping.vultr.com ping statistics ---
-26 packets transmitted, 25 packets received, 3.8% packet loss
-round-trip min/avg/max/stddev = 227.820/249.959/330.037/34.471 ms
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+yum install yum-plugin-fastestmirror
+# 查看系统信息
+uname -r
+# install linux-4.10
+yum --enablerepo=elrepo-kernel install kernel-ml
+# https://www.howtoforge.com/tutorial/how-to-upgrade-kernel-in-centos-7-server/
+autoremove
+reboot
+# 查看系统信息
+uname -r
+yum install yum-utils
 
---- lon-gb-ping.vultr.com ping statistics ---
-31 packets transmitted, 27 packets received, 12.9% packet loss
-round-trip min/avg/max/stddev = 206.538/209.019/212.115/1.339 ms
-
---- fra-de-ping.vultr.com ping statistics ---
-30 packets transmitted, 29 packets received, 3.3% packet loss
-round-trip min/avg/max/stddev = 232.723/233.924/235.920/0.925 ms
-
---- hnd-jp-ping.vultr.com ping statistics ---
-30 packets transmitted, 30 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 220.146/230.448/236.931/4.266 ms
+# BBR install
+echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
+sysctl -p
+lsmod | grep bbr
