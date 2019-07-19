@@ -16,13 +16,6 @@ yum install yum-utils
 
 
 
-
-
-
-
-
-
-
 #环境变量env variable：
 #全局
 /etc/profile

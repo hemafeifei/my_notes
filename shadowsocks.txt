@@ -1,7 +1,7 @@
 MTY2: 老高 144.172.124.191
 linode: teddysun@2018-12-28
 hosthatch: 老高failed then teddysun@2019-05-18 103.73.66.133
-hostXen: root@45.248.87.193 /a82551c361
+hostXen: 
 
 --------------------------------------------------------
 # Azure container
