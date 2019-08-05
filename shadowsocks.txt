@@ -1,8 +1,8 @@
 MTY2: 老高 144.172.124.191
 linode: teddysun@2018-12-28
 hosthatch: 老高failed then teddysun@2019-05-18 103.73.66.133
-hostXen: 
-
+hostXen:
+tencent: 30001/win4sea.com
 --------------------------------------------------------
 # Azure container
 az group create --name WeiSSR --location eastus
