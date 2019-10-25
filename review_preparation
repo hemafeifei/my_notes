@@ -59,13 +59,43 @@ introduction:
 客户分群 - 聚类分析
 
 
-
-
-
-
-
-
 # python generator
 列表解析与生成器表达式
 [expr for iter_var in iterable]
 (expr for iter_var in iterable)
+
+XGBoost对于损失函数有什么要求
+函数二阶可导
+XGBoost和LightGBM的区别？说2点即可
+GOSS: Gradient based One Side sampling
+EFB: Exclusice Feature bundling
+LightGBM的目标函数是什么？
+二分类问题的损失函数一般是？说下交叉熵具体表达式
+log_loss
+会SQL吗？SQL的表联结，左联结 右联结 内联结的原理。
+会SQL的嵌套吗？
+
+176 2083 9512
+Part 2
+  1.过往的大概经历
+    a.本科毕业，工作2年，出国
+    a.留学4年
+    b.回国后广州市交研院、佳都数据、汇丰银行。
+
+  2.求职原因
+    a.汇丰最近频繁的架构调解，开始不稳定。
+    b.谋求更好的平台、行业
+
+  3.未来几年的工作规划
+    a.机器学习建模-技术专家
+    b.内部的技术培训、管理工作
+    c.研发类-
+
+  4.目前薪资  期望薪资
+    a. 28K * 14-15,
+      - 2019年度收入不降低
+      - 2020年度增长40%
+
+  5.提问环节
+    a.年假，陪护假。
+    b.养老金之外，有无企业年金
