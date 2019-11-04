@@ -4,3 +4,11 @@ defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Li
 defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app
 # 2018.03.25 参考下面修改了Terminal 颜色，如果需要复原，需要修改.bash_profile
 https://github.com/cmilr/Git-Beautify-For-MacOS-Terminal
+
+
+# 2019-10 remove anaconda base
+conda config --set changeps1 False
+
+brew install lightgbm
+then
+pip install lightgbm

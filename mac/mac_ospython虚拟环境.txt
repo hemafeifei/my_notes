@@ -22,4 +22,10 @@ conda remove -n yourenvname --all
 
 
 # Install lightgbm
-conda install -c conda-forge lightgbm 
+conda install -c conda-forge lightgbm
+
+
+-- Use Pip
+pip install virtualenv
+virtualenv flask_env
+source flask_env/bin/activate

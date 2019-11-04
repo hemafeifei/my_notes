@@ -3,11 +3,7 @@ linode: teddy
 hostXen:
 tencent: 老高
 --------------------------------------------------------
-# Azure container
-az group create --name WeiSSR --location eastus
-az container create -g WeiSSR --name shadowsocks1 --image oddrationale/docker-shadowsocks --ip-address public --ports 8388 --command-line "/usr/local/bin/ssserver -k password1"
-az container logs --resource-group WeiSSR --name shadowsocks1
---------------------------------------------------------
+
 
 # 老高的安装linux-centos7
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
@@ -51,7 +47,7 @@ chmod +x shadowsocks.sh
 -- KCPTUN
 wget https://github.com/xtaci/kcptun/releases/download/v20180316/kcptun-linux-amd64-20180316.tar.gz
 ./server_linux_amd64 -t "127.0.0.1:30001" -l ":4000" -mode fast2 > kcptun.log 2>&1 &
-./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30001 --crypt chacha20 --key 4sea.club
+./server_linux_amd64 --listen 0.0.0.0:4000 --target 127.0.0.1:30001 --crypt rc4-md5 --key win4sea.com
 sudo netstat -tulpn | grep 4000
 
 --------------------------------------------------------
