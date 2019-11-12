@@ -128,8 +128,25 @@ reboot
 uname -r
 yum install yum-utils
 
-# BBR install
+# 2019 Nov
+#GCP BBR install
+wget –no-check-certificate https://github.com/teddysun/across/raw/master/bbr.sh
+chmod +x bbr.sh
+sudo ./bbr.sh
+
+# install and reboot
+
 echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
 echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
 sysctl -p
+sudo sysctl net.ipv4.tcp_available_congestion_control
+# check output "net.ipv4.tcp_available_congestion_control = bbr cubic reno"
+sudo sysctl -n net.ipv4.tcp_congestion_control
+# check output "bbr"
 lsmod | grep bbr
+
+sudo yum install python-pip -y
+sudo pip install shadowsocks
+sudo ssserver -p 443 -k win4sea.com -m aes-256-cfb --user nobody -d start
+# stop
+sudo ssserver -d stop

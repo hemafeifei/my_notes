@@ -22,7 +22,7 @@ introduction:
 # 激活函数 将神经网络输入层转换到非线性空间的变换器。
 #
 # 特征图大小 python生成器
-# cross_entrppy
+# cross_entropy
 
 
 # Part 2
@@ -44,7 +44,7 @@ introduction:
                -餐馆推荐可能受地理位置的限制，不能推送地理位置太远的餐馆。
                -Cold Start问题
     Task： 建立推荐系统
-    Action:  1. 选取tensorflow WALS模型，适用于模型评分的推荐系统。
+    Action:  1. 选取tensorflow WALS模型，适用于模糊评分的推荐系统。
              2. 在推荐内容用增加地理位置筛选。
              3. 对新用户，根据人口数据推荐最受欢迎的餐馆。
              4. 增加推荐内容的多样性。 50% 模型， 50%随机。
@@ -68,8 +68,10 @@ XGBoost对于损失函数有什么要求
 函数二阶可导
 XGBoost和LightGBM的区别？说2点即可
 GOSS: Gradient based One Side sampling
-EFB: Exclusice Feature bundling
+EFB: Exclusive Feature bundling
+
 LightGBM的目标函数是什么？
+
 二分类问题的损失函数一般是？说下交叉熵具体表达式
 log_loss
 会SQL吗？SQL的表联结，左联结 右联结 内联结的原理。
