@@ -1,6 +1,6 @@
 
 linode: teddy
-hostXen:
+hostKVM: teddy
 tencent: 老高
 --------------------------------------------------------
 
@@ -145,8 +145,50 @@ sudo sysctl -n net.ipv4.tcp_congestion_control
 # check output "bbr"
 lsmod | grep bbr
 
+-- 开启TCP Fast Open：
+/etc/sysctl.conf add
+net.ipv4.tcp_fastopen = 3
+sysctl -p
+-- 记得在json file 中增加"fast_open":true,
+
+-- install with python
 sudo yum install python-pip -y
 sudo pip install shadowsocks
-sudo ssserver -p 443 -k win4sea.com -m aes-256-cfb --user nobody -d start
+ssserver -p 30001 -k win4sea.com -m aes-256-cfb --user nobody -d start
 # stop
 sudo ssserver -d stop
+-- with special settings
+ssserver -c /etc/shadowsocks.json -d start
+
+-- # 2019 Nov 用shadowsocks-libev实现ss服务
+-- 1) install
+cd /etc/yum.repos.d/
+curl -O https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo
+yum install -y shadowsocks-libev
+-- 2) settings
+vi /etc/shadowsocks-libev/config.json
+vi /etc/ss-conf.json
+e.g.:
+{
+  "server": "193.187.118.229",
+  "server_port": 30001,
+  "password": "win4sea.com",
+  "method": "aes-256-gcm",
+  "timeout": 300,
+  "mode": "tcp_and_udp",
+  "fast_open":true,
+}
+-- 推荐method
+aes-128-gcm/aes-192-gcm/aes-256-gcm/chacha20-ietf-poly1305/xchacha20-ietf-poly1305
+
+-- 3) start and stop
+systemctl restart shadowsocks-libev
+systemctl status shadowsocks-libev
+journalctl -u shadowsocks-libev # check log
+
+systemctl enable shadowsocks-libev # start after reboot
+ps ax |grep ss-server # ss-server启用了哪些ss的服务
+
+-- 4) multiple user
+vi /etc/shadowsocks-libev/config2.json # modify the port and password
+setsid ss-server -c /etc/shadowsocks-libev/config2.json -u
