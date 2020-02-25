@@ -1,5 +1,5 @@
 
-linode: teddy  2020-02-22
+linode: teddy  2020-02-23 camelia-256
 hostKVM: teddy 2020-02-19
 tencent HK: 老高
 --------------------------------------------------------
@@ -11,9 +11,9 @@ sh -c "$(curl -fsSL https://bit.ly/2GppK6X)"
 
 systemctl enable shadowsocks-server
 # 重启ss服务
-systemctl restart shadowsocks-server
-systemctl stop shadowsocks-server
-systemctl status shadowsocks-server
+sudo systemctl restart shadowsocks-server
+sudo systemctl stop shadowsocks-server
+sudo systemctl status shadowsocks-server
 
 # 重启kcptun服务
 systemctl restart kcp-server
