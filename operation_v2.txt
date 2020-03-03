@@ -1,0 +1,264 @@
+scp /Users/weizheng/VPS/ldn/app.py centos@172.105.221.193:/home/centos/football
+scp /Users/weizheng/VPS/ldn/app_dash.py centos@45.248.87.193:/home/centos/football
+scp /Users/weizheng/VPS/ldn/app_dash.py centos@124.156.104.59:/home/centos/football/model
+
+after reinstall an OS, you need to refresh the SSH key
+ssh-keygen -R 1172.105.227.40
+
+-- Set locale
+https://www.jianshu.com/p/2de3c13cde89
+
+# Phase 1
+-- If needs, check /etc/yum.repos.d/epel.repo
+yum --enablerepo=extras install epel-release
+rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+yum install yum-plugin-fastestmirror
+yum update
+sudo yum install -y bzip2
+# deploy SS
+
+# create user centos
+# Phase 2 github
+sudo yum -y install git
+sudo yum install xclip
+-- add SSH key on github
+ssh-keygen -t rsa -b 4096 -C "zhengwei8618@gmail.com"
+cat ~/.ssh/id_rsa.pub # and then copy into github
+local: ssh-copy-id centos@92.118.188.181
+
+-- install python36u with centos user
+https://www.digitalocean.com/community/tutorials/how-to-install-python-3-and-set-up-a-local-programming-environment-on-centos-7
+or install anaconda:
+https://linuxize.com/post/how-to-install-anaconda-on-centos-7/
+curl -O https://repo.anaconda.com/archive/Anaconda3-2019.07-Linux-x86_64.sh
+
+sudo yum -y groupinstall development
+sudo yum -y install python36u-devel # install it before UWSGI
+
+# -- sudo yum -y install python36u-devel
+sudo yum -y install gcc
+sudo yum search xvfb
+sudo yum install python-xvfbwrapper.noarch
+sudo pip3.6 install pyvirtualdisplay pandas numpy bs4 lxml selenium
+
+-- # use chromedriver :https://www.jianshu.com/p/b5f3025b5cdd
+sudo yum -y install mesa-libOSMesa-devel gnu-free-sans-fonts wqy-zenhei-fonts xdpyinfo
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+sudo yum install ./google-chrome-stable_current_x86_64.rpm
+
+wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
+(GCP env successed with chromedriver 2.41)
+# -- wget https://chromedriver.storage.googleapis.com/2.46/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+chmod 755 chromedriver
+# install virtualenv
+sudo pip3.6 install virtualenv
+virtualenv env_flask
+pip install -r requirements.txt
+
+# Phase3 Crontab
+date # show timezone, if not Shanghai TZ then:
+sudo timedatectl list-timezones | grep Asia
+sudo timedatectl set-timezone Asia/Shanghai
+# sudo systemctl stop firewalld.service
+sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=55001/tcp --permanent
+sudo systemctl restart firewalld.service
+
+sudo pkill -f uwsgi -9
+sudo yum install net-tools
+netstat -pnl | grep 8080
+
+# Automation
+crontab -e
+# ========== Hong Kong Server =============
+# env EDITOR=vim crontab -e
+#!/bin/sh
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/centos/.local/bin:/home/centos/bin
+*/21 0-4,12-23  * * * cd /home/centos/football/4sea_v2 && python3.6 scrapy_differ.py >> ../log/01_get_differ.txt
+10,30,50 0-5,11-23  * * * cd /home/centos/football/4sea_v2 && python3.6 scrapy_match.py
+29,59 7  * * * cd /home/centos/football/4sea_v2 && python3.6 scrapy_his.py >> ../log/02_get_his.txt
+10,40 8  * * * cd /home/centos/football/4sea_v2 && python3.6 scrapy_nsc_kelly_his.py >> ../log/03_get_kelly_his.txt
+9 10  * * * cd /home/centos/football/4sea_v2 && python3.6 scrapy_g10oal_match.py >> log/04_base_gl10oal.txt
+
+30 11,16 * * * sudo systemctl restart index
+# 45 21  * * 1-5 cd /home/centos/WEM/wealth/scrapy/ && python3.6 get_xueqiu_daily_remote.py >> /home/centos/WEM/log/01_scrapy_xq.txt
+# */20 9 * * * cd /home/centos/WEM/wealth/scrapy/ && python3.6 get_boc_fx.py >> /home/centos/WEM/log/fx_scrapy_boc.txt
+# 1 5,6 * * * cd /home/centos/WEM/wealth/scrapy/ && python3.6 get_global_idx.py >> /home/centos/WEM/log/03_scrapy_idx.txt
+
+# ========== Shanghai Server =============
+0 12 * * * cd /home/centos/PythonApp && tar -zcvf db.tar.gz database
+0 5 1 1,7 * rm -rf /var/spool/mail/centos/*
+# ========== Shanghai Server =============
+#!/bin/sh
+PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/centos/.local/bin:/home/centos/bin
+10,30,50 0-5,11-23  * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 scrapy_match.py
+*/21 0-4,12-23  * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 scrapy_differ.py >> log/ft01_get_differ.txt
+29,59 7  * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 scrapy_his.py >> log/ft02_get_his.txt
+10,40 8  * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 scrapy_nsc_kelly_his.py >> log/ft03_get_kelly_his.txt
+29 10-11  * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 scrapy_g10oal_match.py >> log/ft04_base_gl10oal.txt
+
+30 11,16 * * * sudo systemctl restart index_4sea
+45 21  * * 1-5 cd /home/centos/PythonApp/4sea/scrapy && python3.6 get_xueqiu_daily_remote.py >> log/fi01_scrapy_xq.txt
+*/20 9 * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 get_boc_fx.py >> log/fi02_scrapy_boc.txt
+10 6,7  * * 2-6 cd /home/centos/PythonApp/4sea/scrapy && python3.6 get_bloomberg_idx.py >> log/fi02_scrapy_bloombg.txt
+45 15-16  * * 1-5 cd /home/centos/PythonApp/4sea/scrapy && python3.6 get_jrj_sec.py >> log/fi03_scrapy_jrj.txt
+
+5,35 1 * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 senti_jisilu.py >> log/senti01_jisilu.txt
+5,35 23 * * * cd /home/centos/PythonApp/4sea/scrapy && python3.6 senti_weibo.py >> log/senti02_weibo.txt
+
+# under root user
+0 7 * * * /sbin/shutdown -r now
+
+-- # 07-17 fix bug
+1) cat /var/log/cron
+2) service crond start  /* restart stop status */ or systemctl status crond.service
+3) sudo cat /etc/crontab  /* view the settings of crontab */ SHELL=/bin/bash
+4) systemctl restart rsyslog /* if log date is not correct */
+
+-- view txt
+head/tail/cat/more/less  # tail -n 50 /log/dash.txt
+-- Timezone
+tzselect /* set TZ */ export TZ="Asia/Shanghai"
+printenv TZ
+ps auxwwe | grep cron | grep TZ # important
+
+# Phase 4 WSGI
+source env_flask/bin/activate
+pip install uwsgi
+# pip install dash==0.32.2 dash-html-components==0.13.2 dash-core-components==0.40.3 dash-table==3.1.11
+
+-- WSGI
+vi wsgi.py
+1)
+uwsgi --socket 0.0.0.0:8000 --protocol=http -w wsgi # test WSGI and check error
+
+-- vi index_4sea.ini
+[uwsgi]
+module = wsgi
+
+master = true
+processes = 5
+
+uid = centos
+socket = /run/uwsgi/myproject.sock
+chown-socket = centos:nginx
+chmod-socket = 660
+vacuum = true
+
+die-on-term = true
+
+2)
+sudo vi /etc/systemd/system/index_4sea.service
+
+[Unit]
+Description=uWSGI instance to serve myproject
+After=network.target
+
+[Service]
+ExecStartPre=-/usr/bin/bash -c 'mkdir -p /run/uwsgi; chown user:nginx /run/uwsgi'
+ExecStart=/usr/bin/bash -c 'cd /home/centos/PythonApp/4sea/dash; source /home/centos/env_flask/bin/activate; uwsgi --ini index_4sea.ini'
+
+[Install]
+WantedBy=multi-user.target
+
+
+-- enalbe started when booting
+
+sudo systemctl restart index_4sea
+sudo systemctl enable index_4sea
+sudo systemctl status index_4sea
+
+3) nginx
+sudo yum install nginx
+sudo vim /etc/nginx/nginx.conf
+modify as below showed
+-- server {
+--     listen 80;
+    server_name server_domain_or_IP;
+
+    -- location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/run/uwsgi/myproject.sock;
+--     }
+-- }
+
+
+sudo usermod -a -G nginx centos
+chmod 710 /home/centos
+sudo nginx -t  # test nginx conf
+
+sudo systemctl status nginx
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+
+-- add status
+location /nginx_status {
+stub_status on; access_log off; allow 127.0.0.1; deny all; }
+curl 127.0.0.1/nginx_status
+-- 1.根据访问IP统计UV
+sudo awk '{print $1}'  /var/log/nginx/access.log|sort | uniq -c |wc -l
+-- 2.统计访问URL统计PV
+sudo awk '{print $7}' /var/log/nginx/access.log|wc -l
+-- 4.查询访问最频繁的IP
+sudo awk '{print $1}' /var/log/nginx/access.log|sort | uniq -c |sort -n -k 1 -r|more
+-- 某段时间内的IP
+sudo grep "11/Aug/2018:2[0-9]" /var/log/nginx/access.log | awk '{print $1}' | sort | uniq -c| sort -nr | wc -l
+
+-- 前15的IP
+sudo awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -nr -k1 | head -n 20
+-- 某个IP的详细访问情况
+-- sudo grep '182.92.216.207' /var/log/nginx/access.log |awk '{print $7}'|sort |uniq -c |sort -rn |head -n 100
+
+Error
+sudo tail -n 100 /var/log/nginx/access.log
+sudo tail -n 50 /var/log/nginx/error.log
+-- sudo systemctl stop firewalld.service  重启后要关闭防火墙
+
+-- flask 0.11 + you can use env to start the APP
+export FLASK_APP=hello_flask.py
+export FLASK_DEBUG=1
+flask run
+
+-- flask
+url_for('static', filename='css/mystyles.css', _external=True)
+
+
+-- Security
+local: ssh-copy-id root@124.156.104.59
+local: ssh-copy-id centos@122.51.3.219
+server: mkdir -p ~/.ssh && sudo chmod -R 700 ~/.ssh/
+# let local MBP ssh login
+local: scp ~/.ssh/id_rsa.pub centos@172.105.227.40:~/.ssh/authorized_keys
+local: scp ~/.ssh/id_rsa.pub root@124.156.104.59:~/.ssh/authorized_keys
+
+1)
+-- ssh centos@172.105.221.193 "echo `cat ~/.ssh/uploaded_key.pub` >> ~/.ssh/authorized_keys"
+2)
+sudo vi /etc/ssh/sshd_config
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication no
+sudo systemctl restart sshd
+systemctl restart sshd.service
+
+-- 2018-08-11
+--ip management
+vi /etc/sysctl.conf
+-- add
+net.ipv6.conf.all.disable_ipv6=1
+-- then
+sysctl -p /etc/sysctl.conf
+
+
+https://i.loli.net/2019/11/04/7mPCGdKe2XJfEoA.jpg P1
+https://i.loli.net/2019/11/04/p3A2nbrKfyLD1qX.jpg P2
+https://i.loli.net/2019/11/04/6Use9w3fCvHt2p4.jpg P3
+https://i.loli.net/2019/11/04/cIaQFDqgz1t9Erx.jpg P4
+https://i.loli.net/2019/11/04/aGXUzA1yfdNqIZT.jpg P5
+https://i.loli.net/2019/11/04/px1XfJ4WNQuTPKk.jpg P6
+https://i.loli.net/2019/11/04/yEUzIGS2YLTtWCV.png LOGO
+https://i.loli.net/2019/11/04/aN2CsnpKvtLzEem.png LOGO - TEXT
+
+全球指数 沪深市场 ETF追踪
+今日赛事 赛果预测 历史回查
+热搜榜 市场情绪

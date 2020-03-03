@@ -1,9 +1,10 @@
 
-linode: teddy  2020-02-23 camelia-256
-hostKVM: teddy 2020-02-19
-tencent HK: 老高
+linode: teddy  2020-02-29 aes-192-cfb 172.105.227.40
+hostKVM: teddy 2020-02-19 camellia-256 stopped
+tencent HK: teddy  2020-02-29 night camellia-128-cfb
 --------------------------------------------------------
 
+firewall-cmd --zone=public --add-port=17849/tcp --permanent && firewall-cmd --reload
 
 # 老高的安装linux-centos7
 https://gist.github.com/phpgao/7b2a684de565719a0edd323f659ef678
