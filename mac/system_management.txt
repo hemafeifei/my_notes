@@ -12,3 +12,12 @@ conda config --set changeps1 False
 brew install lightgbm
 then
 pip install lightgbm
+
+# 2020-03 mount NTFS on mac
+sudo vi /etc/fstab
+LABEL=W_ASUS none ntfs rw,auto,nobrowse
+如果你已经把硬盘插上了，请把它推出，拔掉重新插上，这次在桌面或者访达里面都看不到你的硬盘了...
+程序-实用工具-磁盘工具】，在这里你应该可以看到移动硬盘，右键在访达中显示，
+这次应该看不到铅笔杠掉的图标了～你可以任意粘贴删除文件操作。
+
+安装了希捷的 NTFS for mac

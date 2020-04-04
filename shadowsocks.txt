@@ -52,6 +52,42 @@ wget https://github.com/xtaci/kcptun/releases/download/v20180316/kcptun-linux-am
 sudo netstat -tulpn | grep 4000
 
 --------------------------------------------------------
+2020-04-04 Deploy Ahri
+1) install and update centos7
+yum install firewalld
+sudo systemctl restart dbus
+sudo systemctl restart firewalld
+2) firewall-cmd --zone=public --add-port=35477/tcp --permanent && firewall-cmd --reload
+https://github.com/GavinGuan24/ahri/blob/master/core/ahri_guide.md
+
+wget "https://github.com/GavinGuan24/ahri/releases/download/v0.9.3/ahri_0.9.3_linux_amd64.tgz"
+tar -zxf ahri_0.9.3_linux_arm64.tgz
+
+-- Start on Server
+./start.sh
+
+3) on macos client, modify client/start.sh to:
+nohup ./ahri-client \
+-sip 45.134.169.88 \
+-sp 35477 \
+-k win4sea.com \
+-n A \
+-m 0 \
+-s5ip 127.0.0.1 \
+-s5p 23456 \
+-f ahri.hosts \
+-L 3 \
+-T 5 \
+>./a.log 2>&1 &
+
+exit 0
+
+4) on macos clinet
+# 开启 WIFI 网卡的 socks 代理。
+networksetup -setsocksfirewallproxy Wi-Fi 127.0.0.1 23456 && networksetup -setsocksfirewallproxystate Wi-Fi on
+# 关闭 WIFI 网卡的 socks 代理
+networksetup -setsocksfirewallproxy Wi-Fi '' '' && networksetup -setsocksfirewallproxystate Wi-Fi off
+--------------------------------------------------------
 # 配置多用户与流量限制
 1)https://www.rosehosting.com/blog/how-to-install-plsython-3-6-4-on-centos-7
 2)
