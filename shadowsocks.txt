@@ -1,7 +1,7 @@
 
 linode: teddy  2020-02-29 aes-192-cfb 172.105.227.40
 hostKVM: teddy 2020-02-19 camellia-256 stopped
-tencent HK: teddy  2020-02-29 night camellia-128-cfb
+tencent HK: V2ray 2020-04-05
 --------------------------------------------------------
 
 firewall-cmd --zone=public --add-port=17849/tcp --permanent && firewall-cmd --reload
@@ -57,14 +57,18 @@ sudo netstat -tulpn | grep 4000
 yum install firewalld
 sudo systemctl restart dbus
 sudo systemctl restart firewalld
-2) firewall-cmd --zone=public --add-port=35477/tcp --permanent && firewall-cmd --reload
+2)
+sudo firewall-cmd --zone=public --add-port=443/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=80/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=35477/tcp --permanent && sudo firewall-cmd --reload
 https://github.com/GavinGuan24/ahri/blob/master/core/ahri_guide.md
 
-wget "https://github.com/GavinGuan24/ahri/releases/download/v0.9.3/ahri_0.9.3_linux_amd64.tgz"
-tar -zxf ahri_0.9.3_linux_arm64.tgz
+wget "https://github.com/GavinGuan24/ahri/releases/download/v0.9.3/ahri_0.9.3_linux_amd64.tgz" &&
+tar -zxf ahri_0.9.3_linux_amd64.tgz
 
 -- Start on Server
-./start.sh
+vi ./start.sh
+Note: 腾讯云上需使用内网IP
 
 3) on macos client, modify client/start.sh to:
 nohup ./ahri-client \
@@ -82,11 +86,33 @@ nohup ./ahri-client \
 
 exit 0
 
+
 4) on macos clinet
 # 开启 WIFI 网卡的 socks 代理。
 networksetup -setsocksfirewallproxy Wi-Fi 127.0.0.1 23456 && networksetup -setsocksfirewallproxystate Wi-Fi on
 # 关闭 WIFI 网卡的 socks 代理
 networksetup -setsocksfirewallproxy Wi-Fi '' '' && networksetup -setsocksfirewallproxystate Wi-Fi off
+--------------------------------------------------------
+**********GCP Setting****************
+1)打开IP转发
+2)点击 SSH ，打开 SSH 窗口，先运行
+  sudo -i
+  vi /etc/ssh/sshd_config
+3)修改 PermitRootLogin 和 PasswordAuthentication 为 yes
+# Authentication:
+PermitRootLogin yes //默认为no，需要开启root用户访问改为yes
+# Change to no to disable tunnelled clear text passwords
+PasswordAuthentication yes //默认为no，改为yes开启密码登陆
+4)给root用户设置密码
+  passwd root
+5)重启SSH服务使修改生效
+  /etc/init.d/ssh restart
+  然后就可以愉快使用用户名和密码登录到 VPS 了
+
+--------------------------------------------------------
+2020-Apr V2ray
+bash <(curl -s -L https://git.io/v2ray.sh)
+
 --------------------------------------------------------
 # 配置多用户与流量限制
 1)https://www.rosehosting.com/blog/how-to-install-plsython-3-6-4-on-centos-7
@@ -117,21 +143,11 @@ cd ss-bash-master/
 # 配置开机启动
 sudo vi /etc/rc.local
 /root/ss-bash-master/ssadmin.sh start
+cd ~/server && ./stop.sh && ./start.sh
 ---------------------------------------------------------
 ssserver -c /etc/shadowsocks/config.json -d start 后台启动
 ssserver -c /etc/shadowsocks/config.json -d stop 后台停止
 
-{
-    "server": "139.162.71.205",
-    "local_address":"127.0.0.1",
-    "local_port":1080,
-    "timeout": 300,
-    "method": "chacha20",
-    "port_password": {
-        "30001": "zhengwei2017",
-        "30003": "yanhongqiang"
-    }
-}
 --------------------------------------------------------
 # 设置主机域名
 hostname  www  #设置主机名为www
@@ -151,19 +167,19 @@ shutdown -r now  #重启系统
 ----------------------------------------------------------
 update linux 4.10
 
-rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
-yum install yum-plugin-fastestmirror
+sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
+sudo yum install yum-plugin-fastestmirror
 # 查看系统信息
-uname -r
+uname -snr
 # install linux-4.10
-yum --enablerepo=elrepo-kernel install kernel-ml
+sudo yum --enablerepo=elrepo-kernel install kernel-ml -y
 # https://www.howtoforge.com/tutorial/how-to-upgrade-kernel-in-centos-7-server/
 autoremove
-reboot
+sudo shutdown -r now # reboot
 # 查看系统信息
-uname -r
-yum install yum-utils
+uname -snr
+sudo yum install yum-utils -y
 
 # 2019 Nov
 #GCP BBR install
@@ -175,7 +191,7 @@ sudo ./bbr.sh
 
 echo "net.core.default_qdisc=fq" >> /etc/sysctl.conf
 echo "net.ipv4.tcp_congestion_control=bbr" >> /etc/sysctl.conf
-sysctl -p
+sudo sysctl -p
 sudo sysctl net.ipv4.tcp_available_congestion_control
 # check output "net.ipv4.tcp_available_congestion_control = bbr cubic reno"
 sudo sysctl -n net.ipv4.tcp_congestion_control
@@ -183,7 +199,7 @@ sudo sysctl -n net.ipv4.tcp_congestion_control
 lsmod | grep bbr
 
 -- 开启TCP Fast Open：
-/etc/sysctl.conf add
+sudo vi /etc/sysctl.conf add
 net.ipv4.tcp_fastopen = 3
 sysctl -p
 -- 记得在json file 中增加"fast_open":true,
