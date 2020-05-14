@@ -111,7 +111,18 @@ PasswordAuthentication yes //默认为no，改为yes开启密码登陆
 
 --------------------------------------------------------
 2020-Apr V2ray
-bash <(curl -s -L https://git.io/v2ray.sh)
+-- bash <(curl -s -L https://git.io/v2ray.sh)
+bash <(curl -L -s https://install.direct/go.sh)
+cat /etc/v2ray/config.json
+tail -n 100 /var/log/v2ray/access.log
+service v2ray start|stop|status|reload|restart|force-reload
+#停用并卸载服务（systemd）：
+systemctl stop v2ray
+systemctl disable v2ray
+
+#停用并卸载服务（sysv）：
+service v2ray stop
+update-rc.d -f v2ray remove
 
 --------------------------------------------------------
 # 配置多用户与流量限制
@@ -165,15 +176,7 @@ vi /etc/hosts #编辑配置文件
 
 shutdown -r now  #重启系统
 ----------------------------------------------------------
-update linux 4.10
-
-sudo rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
-sudo rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-3.el7.elrepo.noarch.rpm
-sudo yum install yum-plugin-fastestmirror
-# 查看系统信息
-uname -snr
-# install linux-4.10
-sudo yum --enablerepo=elrepo-kernel install kernel-ml -y
+-- update linux 4.10
 # https://www.howtoforge.com/tutorial/how-to-upgrade-kernel-in-centos-7-server/
 autoremove
 sudo shutdown -r now # reboot

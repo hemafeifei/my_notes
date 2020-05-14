@@ -21,3 +21,15 @@ LABEL=W_ASUS none ntfs rw,auto,nobrowse
 这次应该看不到铅笔杠掉的图标了～你可以任意粘贴删除文件操作。
 
 安装了希捷的 NTFS for mac
+
+# Sleep 2020-May
+pmset -g custom
+sleep >= disksleep >= display sleep
+
+sudo pmset -b sleep 10
+-a ALL
+-b battery
+-c AC
+
+# 允许任何安装来源app
+sudo spctl --master-disable
