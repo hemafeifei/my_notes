@@ -14,7 +14,7 @@ systemctl start postgresql-10
 
 # 2 数据库账户http://www.jianshu.com/p/7e95fd0bc91a
 su - postgres #
-psql -U postgres #
+psql -U postgres # 登录pg数据库
 ALTER USER postgres WITH PASSOWRD 'postgres123';
 
 # 3 linux系统postgres账户(root权限下)
