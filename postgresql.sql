@@ -23,7 +23,7 @@ passwd postgres # postgres123
 
 # 4 配置
 /var/lib/pgsql/10/data/�� postgressql.conf
-修改#listen_addresses = 'localhost'  Ϊ  listen_addresses='*'
+修改#listen_addresses = 'localhost'  to listen_addresses='*'
 
 # 5 远程配置
 /var/lib/pgsql/10/data/�� pg_hba.conf

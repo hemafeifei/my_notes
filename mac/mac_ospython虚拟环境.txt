@@ -31,3 +31,12 @@ virtualenv flask_env
 source flask_env/bin/activate
 
 pip freeze > requirements.txt
+
+-- Use pyenv
+brew install pyenv
+pyenv install 3.7.2
+pyenv global 3.7.2
+pyenv install –list
+
+-- sometimes you need to check your system env with python version
+brew doctor
