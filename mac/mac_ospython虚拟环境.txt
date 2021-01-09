@@ -1,33 +1,10 @@
 # python 虚拟环境
-
-conda list查看安装了哪些包
-conda env list查看有哪些虚拟环境
-conda -V查看conda的版本
-
-conda create -n myflaskapp flask
-
-# 激活环境
-source activate py27
-
-# 安装pkg
-conda install -n py27 [package]
-
-# 离开环境
-source deactive
-
-#移除环境中某个包
-conda remove -n $py27 $package_name
-# 移除虚拟环境
-conda remove -n yourenvname --all
-
-
-# Install lightgbm
-conda install -c conda-forge lightgbm
-
-
--- Use Pip
+-- Use Pip for python3
 pip install virtualenv
 virtualenv flask_env
+
+-- for python3
+python3 -m venv myenv
 source flask_env/bin/activate
 
 pip freeze > requirements.txt
