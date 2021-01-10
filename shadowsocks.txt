@@ -68,11 +68,22 @@ tar -zxf ahri_0.9.3_linux_amd64.tgz
 
 -- Start on Server
 vi ./start.sh
-Note: 腾讯云上需使用内网IP
+# Note: 腾讯云上需使用内网IP
+nohup ./ahri-server \
+-ip 92.118.188.181 \
+-p 35477 \
+-k win4sea.com \
+-a rsa_private_key.pem \
+-b rsa_public_key.pem \
+-L 3 \
+-T 5 \
+>./a.log 2>&1 &
+
+exit 0
 
 3) on macos client, modify client/start.sh to:
 nohup ./ahri-client \
--sip 45.134.169.88 \
+-sip 129.226.74.105 \
 -sp 35477 \
 -k win4sea.com \
 -n A \
@@ -112,7 +123,7 @@ PasswordAuthentication yes //默认为no，改为yes开启密码登陆
 --------------------------------------------------------
 2020-Apr V2ray
 -- bash <(curl -s -L https://git.io/v2ray.sh)
-bash <(curl -L -s https://install.direct/go.sh)
+bash <(curl -L -s https://install.direct/go.sh) # 官网
 cat /etc/v2ray/config.json
 tail -n 100 /var/log/v2ray/access.log
 service v2ray start|stop|status|reload|restart|force-reload
@@ -123,7 +134,10 @@ systemctl disable v2ray
 #停用并卸载服务（sysv）：
 service v2ray stop
 update-rc.d -f v2ray remove
-
+--------------------------------------------------------
+2020 May
+https://www.linodovultr.com/post/resolve-v2ray-after-install-can-not-connect.html
+netstat -apn | grep v2ray
 --------------------------------------------------------
 # 配置多用户与流量限制
 1)https://www.rosehosting.com/blog/how-to-install-plsython-3-6-4-on-centos-7

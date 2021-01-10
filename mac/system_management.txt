@@ -27,9 +27,19 @@ pmset -g custom
 sleep >= disksleep >= display sleep
 
 sudo pmset -b sleep 10
+sudo pmset -a hibernatemode 0
 -a ALL
 -b battery
 -c AC
 
+# wanna to save energy during sleeping
+sudo pmset -b tcpkeepalive 0
+
 # 允许任何安装来源app
 sudo spctl --master-disable
+
+# sleep prevented by AddressBookSourceSync
+1) setting:
+launchctl unload -w /System/Library/LaunchAgents/com.apple.AddressBook.SourceSync.plist
+2) undo:
+launchctl load -w /System/Library/LaunchAgents/com.apple.AddressBook.SourceSync.plist
