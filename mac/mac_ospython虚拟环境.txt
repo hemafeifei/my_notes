@@ -15,5 +15,8 @@ pyenv install 3.7.2
 pyenv global 3.7.2
 pyenv install –list
 
+pyenv versions
+pyenv local 3.6.12
+
 -- sometimes you need to check your system env with python version
 brew doctor
