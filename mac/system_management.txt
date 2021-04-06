@@ -6,6 +6,10 @@ defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Lib
 https://github.com/cmilr/Git-Beautify-For-MacOS-Terminal
 
 
+# 模仿Unix系统tree命令生成文件夹树状图
+vi .zshrc
+alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
+
 # 2019-10 remove anaconda base
 conda config --set changeps1 False
 
