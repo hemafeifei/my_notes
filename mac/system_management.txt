@@ -49,8 +49,30 @@ launchctl unload -w /System/Library/LaunchAgents/com.apple.AddressBook.SourceSyn
 launchctl load -w /System/Library/LaunchAgents/com.apple.AddressBook.SourceSync.plist
 
 
-# homebrew 国内源，需要卸载brew已经安装的
+# homebrew 已经安装的
 blueutil	libomp		lightgbm	telnet
-/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
-出了brew权限问题，无法修复中，参考下面命令
-sudo chown -R $(whoami) $(brew --prefix)/*
+
+# homebrew 设置国内源
+# 步骤一
+cd "$(brew --repo)"
+git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/brew.git
+
+# 步骤二
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+git remote set-url origin https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+
+cd "$(brew --repo)"/Library/Taps/homebrew/homebrew-cask
+git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
+
+#步骤三
+brew update
+# 恢复
+cd "$(brew --repo)"
+git remote set-url origin https://github.com/Homebrew/brew.git
+
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+git remote set-url origin https://github.com/Homebrew/homebrew-core
+
+cd "$(brew --repo)"/Library/Taps/homebrew/homebrew-cask
+git remote set-url origin https://github.com/Homebrew/homebrew-cask
+brew update
