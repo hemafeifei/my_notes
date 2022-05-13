@@ -31,7 +31,7 @@ git config --global --edit # 编辑本地机器设置，例如name
 # 在github 将机器的ssh key添加进去
 https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
 (1) windows 使用git bash工具
-ssh-keygen -t rsa -b 4096 -C "zhengwei8618@gmail.com" #后面一路Enter
+
 (2)
 eval $(ssh-agent -s) # 得到一个 Agent pid
 ssh-add ~/.ssh/id_rsa
